@@ -3,359 +3,494 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Akina Check - Sistema Inteligente de Inspección</title>
+    <title>Akina Check | Sistema de Evaluación Vehicular</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- Cabecera fija -->
+    <!-- Header profesional -->
     <header class="header">
         <div class="container">
             <div class="header-content">
-                <h1 class="logo">Akina Check</h1>
-                <p class="tagline">Sistema Inteligente de Evaluación Vehicular</p>
+                <div class="header-brand">
+                    <div class="logo-container">
+                        <div class="logo-icon">🔍</div>
+                        <div class="logo-text">
+                            <h1 class="logo-main">AKINA CHECK</h1>
+                            <p class="logo-subtitle">Evaluación Vehicular Profesional</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <div class="report-info">
+                        <div class="info-item">
+                            <i class="fas fa-calendar"></i>
+                            <span id="current-date"></span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-file-alt"></i>
+                            <span id="report-number">INSP-001</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
 
-    <main class="main-content container">
-        <!-- Panel de control inteligente -->
-        <section class="intelligence-panel card">
-            <div class="panel-header">
-                <h2>🧠 Evaluación Inteligente Akina</h2>
-                <div class="system-status" id="system-status">
-                    <span class="status-indicator active"></span>
-                    Sistema activo
-                </div>
-            </div>
-            
-            <div class="panel-content">
-                <div class="intelligence-explanation">
-                    <p>El sistema analiza cada componente por <strong>categoría</strong> y <strong>peso</strong>, aplicando criterios profesionales automatizados.</p>
-                    <div class="category-legend">
-                        <div class="legend-item">
-                            <span class="legend-color critical"></span>
-                            <span>Crítico (Alto impacto)</span>
-                        </div>
-                        <div class="legend-item">
-                            <span class="legend-color security"></span>
-                            <span>Seguridad (Impacto medio)</span>
-                        </div>
-                        <div class="legend-item">
-                            <span class="legend-color legal"></span>
-                            <span>Legal (Alto impacto)</span>
-                        </div>
-                        <div class="legend-item">
-                            <span class="legend-color aesthetic"></span>
-                            <span>Estético (Bajo impacto)</span>
+    <main class="main-content">
+        <div class="container">
+            <!-- Panel de control del inspector -->
+            <section class="inspector-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-clipboard-check"></i> Panel de Evaluación</h2>
+                    <div class="inspector-info">
+                        <div class="inspector-badge">
+                            <i class="fas fa-user-shield"></i>
+                            <span>Inspector: <strong id="inspector-name">Usuario Demo</strong></span>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+                
+                <!-- Datos del vehículo -->
+                <div class="vehicle-data-section">
+                    <h3><i class="fas fa-car"></i> Datos del Vehículo</h3>
+                    <form id="vehicle-form" class="vehicle-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fecha"><i class="fas fa-calendar-day"></i> Fecha de Inspección</label>
+                                <input type="date" id="fecha" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="kilometraje"><i class="fas fa-tachometer-alt"></i> Kilometraje</label>
+                                <input type="number" id="kilometraje" placeholder="Ej: 75,000" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="vehiculo"><i class="fas fa-car-side"></i> Vehículo (Modelo/Año)</label>
+                                <input type="text" id="vehiculo" placeholder="Toyota Corolla 2018" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="dominio"><i class="fas fa-id-card"></i> Dominio/Matrícula</label>
+                                <input type="text" id="dominio" placeholder="ABC123" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="observacion"><i class="fas fa-sticky-note"></i> Observaciones del Inspector</label>
+                            <textarea id="observacion" placeholder="Ingrese observaciones relevantes sobre el estado general del vehículo..." maxlength="500"></textarea>
+                            <div class="char-counter"><span id="char-count">0</span>/500 caracteres</div>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Indicadores rápidos -->
+                <div class="quick-indicators">
+                    <div class="indicator">
+                        <div class="indicator-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="indicator-content">
+                            <span class="indicator-label">Problemas Críticos</span>
+                            <span id="critical-indicator" class="indicator-value">0</span>
+                        </div>
+                    </div>
+                    <div class="indicator">
+                        <div class="indicator-icon">
+                            <i class="fas fa-exclamation-circle"></i>
+                        </div>
+                        <div class="indicator-content">
+                            <span class="indicator-label">Atenciones</span>
+                            <span id="warning-indicator" class="indicator-value">0</span>
+                        </div>
+                    </div>
+                    <div class="indicator">
+                        <div class="indicator-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="indicator-content">
+                            <span class="indicator-label">Componentes OK</span>
+                            <span id="ok-indicator" class="indicator-value">0</span>
+                        </div>
+                    </div>
+                    <div class="indicator">
+                        <div class="indicator-icon">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <div class="indicator-content">
+                            <span class="indicator-label">Evaluados</span>
+                            <span id="evaluated-indicator" class="indicator-value">0/15</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-        <!-- Formulario de datos -->
-        <section class="form-section card">
-            <h2>📋 Datos del Vehículo</h2>
-            <form id="vehicle-form">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="fecha">Fecha de Inspección</label>
-                        <input type="date" id="fecha" required>
+            <!-- Sistema de evaluación -->
+            <section class="evaluation-system">
+                <div class="evaluation-header">
+                    <h2><i class="fas fa-search"></i> Evaluación de Componentes</h2>
+                    <div class="evaluation-help">
+                        <button id="evaluation-guide" class="btn-help">
+                            <i class="fas fa-question-circle"></i> Guía de Evaluación
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Categorías de evaluación -->
+                <div class="evaluation-categories">
+                    <div class="category-card critical">
+                        <div class="category-header">
+                            <h4><i class="fas fa-times-circle"></i> Críticos</h4>
+                            <span class="category-count" id="critical-count">0</span>
+                        </div>
+                        <p class="category-desc">Componentes que comprometen seguridad o funcionamiento básico</p>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="vehiculo">Vehículo (Modelo/Año)</label>
-                        <input type="text" id="vehiculo" placeholder="Toyota Corolla 2018" required>
+                    <div class="category-card important">
+                        <div class="category-header">
+                            <h4><i class="fas fa-exclamation-circle"></i> Importantes</h4>
+                            <span class="category-count" id="important-count">0</span>
+                        </div>
+                        <p class="category-desc">Afectan seguridad, confiabilidad o valor del vehículo</p>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="dominio">Dominio/Matrícula</label>
-                        <input type="text" id="dominio" placeholder="ABC123" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="kilometraje">Kilometraje (km)</label>
-                        <input type="number" id="kilometraje" placeholder="75000" required>
+                    <div class="category-card secondary">
+                        <div class="category-header">
+                            <h4><i class="fas fa-check-circle"></i> Secundarios</h4>
+                            <span class="category-count" id="secondary-count">0</span>
+                        </div>
+                        <p class="category-desc">Afectan estética, confort o mantenimiento preventivo</p>
                     </div>
                 </div>
                 
-                <div class="form-group">
-                    <label for="observacion">Observación General</label>
-                    <textarea id="observacion" placeholder="Observaciones relevantes del inspector..." maxlength="300"></textarea>
-                    <div class="char-counter"><span id="char-count">0</span>/300</div>
+                <!-- Checklist profesional -->
+                <div class="checklist-container">
+                    <div class="checklist-header">
+                        <h3><i class="fas fa-tasks"></i> Lista de Verificación</h3>
+                        <div class="checklist-controls">
+                            <button id="checklist-expand" class="btn-control">
+                                <i class="fas fa-expand"></i> Expandir Todo
+                            </button>
+                            <button id="checklist-reset" class="btn-control">
+                                <i class="fas fa-redo"></i> Reiniciar
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="checklist-items" id="checklist-container">
+                        <!-- Los items se generarán dinámicamente -->
+                    </div>
                 </div>
-            </form>
-        </section>
+            </section>
 
-        <!-- Sistema de semáforo inteligente -->
-        <section class="intelligent-traffic-light card">
-            <div class="traffic-light-header">
-                <h2>🚦 Recomendación Inteligente</h2>
-                <div class="ai-badge">Sistema Akina IA</div>
-            </div>
-            
-            <!-- Semáforo visual -->
-            <div class="traffic-light-visual">
-                <div class="light-container">
-                    <div class="intelligent-light green" id="light-green" data-status="green">
-                        <div class="light-icon">🟢</div>
-                        <div class="light-main">Comprar</div>
-                        <div class="light-sub">Buen negocio</div>
-                    </div>
-                    
-                    <div class="intelligent-light yellow" id="light-yellow" data-status="yellow">
-                        <div class="light-icon">🟡</div>
-                        <div class="light-main">Renegociar</div>
-                        <div class="light-sub">Con reparaciones</div>
-                    </div>
-                    
-                    <div class="intelligent-light red" id="light-red" data-status="red">
-                        <div class="light-icon">🔴</div>
-                        <div class="light-main">No comprar</div>
-                        <div class="light-sub">Muchos problemas</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Explicación automática -->
-            <div class="explanation-container" id="explanation-container">
-                <div class="explanation-header">
-                    <h3>📊 Análisis Automático</h3>
-                    <button class="info-btn" id="show-rules">ℹ️ Ver reglas</button>
-                </div>
-                <div class="explanation-content" id="auto-explanation">
-                    <p class="placeholder">Complete el checklist para ver el análisis inteligente.</p>
-                </div>
-            </div>
-            
-            <!-- Control del inspector -->
-            <div class="inspector-control" id="inspector-control">
-                <div class="control-header">
-                    <h3>👨‍🔧 Ajuste Profesional</h3>
-                    <span class="control-badge">Opcional</span>
-                </div>
-                <p class="control-description">Como inspector, puede ajustar la recomendación basado en su criterio profesional.</p>
-                
-                <div class="adjustment-options">
-                    <div class="adjustment-option">
-                        <input type="radio" id="accept-ai" name="adjustment" value="accept" checked>
-                        <label for="accept-ai">
-                            <span class="option-title">Aceptar recomendación del sistema</span>
-                            <span class="option-desc">Confiar en el análisis automatizado</span>
-                        </label>
-                    </div>
-                    
-                    <div class="adjustment-option">
-                        <input type="radio" id="adjust-ai" name="adjustment" value="adjust">
-                        <label for="adjust-ai">
-                            <span class="option-title">Ajustar recomendación</span>
-                            <span class="option-desc">Basado en mi criterio profesional</span>
-                        </label>
-                    </div>
-                </div>
-                
-                <!-- Selector de ajuste manual (oculto por defecto) -->
-                <div class="manual-adjustment" id="manual-adjustment" style="display: none;">
-                    <div class="manual-lights">
-                        <button class="manual-light-btn green" data-status="green">🟢 Comprar</button>
-                        <button class="manual-light-btn yellow" data-status="yellow">🟡 Renegociar</button>
-                        <button class="manual-light-btn red" data-status="red">🔴 No comprar</button>
-                    </div>
-                    <div class="manual-reason">
-                        <label for="adjustment-reason">Motivo del ajuste:</label>
-                        <textarea id="adjustment-reason" placeholder="Explique brevemente por qué ajusta la recomendación del sistema..." maxlength="200"></textarea>
-                    </div>
-                </div>
-                
-                <!-- Estado final -->
-                <div class="final-status" id="final-status">
-                    <div class="status-message" id="status-message">
-                        <span class="status-icon">✅</span>
-                        <span class="status-text">Recomendación del sistema activa</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Checklist inteligente -->
-        <section class="intelligent-checklist card">
-            <div class="checklist-header">
-                <h2>🔍 Checklist Inteligente</h2>
-                <div class="checklist-stats" id="checklist-stats">
-                    <span class="stat-item">0/15 evaluados</span>
-                </div>
-            </div>
-            
-            <div class="category-tabs" id="category-tabs">
-                <!-- Tabs generadas dinámicamente -->
-            </div>
-            
-            <div class="checklist-container" id="checklist-container">
-                <!-- Items generados dinámicamente -->
-            </div>
-            
-            <div class="checklist-footer">
-                <button class="reset-btn" id="reset-checklist">🔄 Reiniciar evaluación</button>
-            </div>
-        </section>
-
-        <!-- Panel de análisis detallado -->
-        <section class="analysis-panel card">
-            <h2>📈 Análisis Detallado por Capas</h2>
-            
-            <div class="layer-analysis">
-                <div class="layer" id="layer1-analysis">
-                    <h3>1️⃣ Clasificación de Ítems</h3>
-                    <div class="layer-content">
-                        <p>Cada componente evaluado según categoría y peso:</p>
-                        <div class="classification-summary" id="classification-summary">
-                            <!-- Generado dinámicamente -->
+            <!-- Resumen de evaluación -->
+            <section class="evaluation-summary">
+                <div class="summary-header">
+                    <h2><i class="fas fa-chart-bar"></i> Resumen de Evaluación</h2>
+                    <div class="summary-status" id="summary-status">
+                        <div class="status-badge incomplete">
+                            <i class="fas fa-clock"></i> Evaluación Incompleta
                         </div>
                     </div>
                 </div>
                 
-                <div class="layer" id="layer2-analysis">
-                    <h3>2️⃣ Estado + Peso</h3>
-                    <div class="layer-content">
-                        <p>Evaluación combinada de estado y categoría:</p>
-                        <div class="weight-analysis" id="weight-analysis">
-                            <!-- Generado dinámicamente -->
+                <div class="summary-content">
+                    <!-- Resultado de evaluación -->
+                    <div class="evaluation-result">
+                        <div class="result-header">
+                            <h3><i class="fas fa-clipboard-check"></i> Resultado Final</h3>
+                            <div class="result-control">
+                                <button id="toggle-recommendation" class="btn-control">
+                                    <i class="fas fa-edit"></i> Ajustar Recomendación
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="result-container">
+                            <div class="result-visual">
+                                <div class="result-light" id="result-red">
+                                    <div class="light-icon">
+                                        <i class="fas fa-times"></i>
+                                    </div>
+                                    <div class="light-content">
+                                        <h4>NO RECOMENDADO</h4>
+                                        <p>No proceder con la compra</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="result-light" id="result-yellow">
+                                    <div class="light-icon">
+                                        <i class="fas fa-exclamation"></i>
+                                    </div>
+                                    <div class="light-content">
+                                        <h4>CONDICIONAL</h4>
+                                        <p>Sujeto a reparaciones</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="result-light" id="result-green">
+                                    <div class="light-icon">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <div class="light-content">
+                                        <h4>APROBADO</h4>
+                                        <p>Adecuado para compra</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Explicación de resultado -->
+                            <div class="result-explanation">
+                                <div class="explanation-header">
+                                    <h4><i class="fas fa-comment-alt"></i> Análisis del Inspector</h4>
+                                </div>
+                                <div class="explanation-content" id="result-explanation">
+                                    <p class="placeholder">Complete la evaluación para ver el análisis detallado.</p>
+                                </div>
+                                
+                                <!-- Ajuste manual (oculto por defecto) -->
+                                <div class="manual-adjustment" id="manual-adjustment" style="display: none;">
+                                    <div class="adjustment-header">
+                                        <h5><i class="fas fa-user-edit"></i> Ajuste Manual de Recomendación</h5>
+                                    </div>
+                                    <div class="adjustment-options">
+                                        <select id="manual-recommendation" class="form-select">
+                                            <option value="">Seleccionar recomendación</option>
+                                            <option value="green">APROBADO - Adecuado para compra</option>
+                                            <option value="yellow">CONDICIONAL - Sujeto a reparaciones</option>
+                                            <option value="red">NO RECOMENDADO - No proceder con compra</option>
+                                        </select>
+                                        <div class="adjustment-reason">
+                                            <label for="adjustment-reason"><i class="fas fa-edit"></i> Motivo del ajuste:</label>
+                                            <textarea id="adjustment-reason" placeholder="Explique el motivo del ajuste de recomendación..." maxlength="300"></textarea>
+                                        </div>
+                                        <div class="adjustment-actions">
+                                            <button id="confirm-adjustment" class="btn-primary">
+                                                <i class="fas fa-check"></i> Confirmar Ajuste
+                                            </button>
+                                            <button id="cancel-adjustment" class="btn-secondary">
+                                                <i class="fas fa-times"></i> Cancelar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Detalle por categorías -->
+                    <div class="category-details">
+                        <div class="details-header">
+                            <h3><i class="fas fa-list-alt"></i> Detalle por Categorías</h3>
+                        </div>
+                        <div class="details-content" id="category-details">
+                            <!-- Se generará dinámicamente -->
                         </div>
                     </div>
                 </div>
+            </section>
+
+            <!-- Vista previa del informe -->
+            <section class="report-preview-section">
+                <div class="preview-header">
+                    <h2><i class="fas fa-file-pdf"></i> Vista Previa del Informe</h2>
+                    <div class="preview-actions">
+                        <button id="generate-pdf" class="btn-primary">
+                            <i class="fas fa-download"></i> Generar PDF
+                        </button>
+                        <button id="toggle-preview" class="btn-secondary">
+                            <i class="fas fa-eye"></i> Mostrar/Ocultar
+                        </button>
+                    </div>
+                </div>
                 
-                <div class="layer" id="layer3-analysis">
-                    <h3>3️⃣ Reglas Profesionales</h3>
-                    <div class="layer-content">
-                        <p>Reglas aplicadas en esta evaluación:</p>
-                        <div class="rules-applied" id="rules-applied">
-                            <!-- Generado dinámicamente -->
+                <div class="preview-container" id="report-preview">
+                    <!-- Contenido del informe -->
+                    <div class="report-content">
+                        <!-- Cabecera del informe -->
+                        <div class="report-header">
+                            <div class="report-brand">
+                                <div class="report-logo">AKINA CHECK</div>
+                                <div class="report-subtitle">INFORME DE EVALUACIÓN VEHICULAR</div>
+                                <div class="report-meta">
+                                    <div class="meta-item">
+                                        <span class="meta-label">N° INFORME:</span>
+                                        <span id="report-id" class="meta-value">INSP-001</span>
+                                    </div>
+                                    <div class="meta-item">
+                                        <span class="meta-label">FECHA:</span>
+                                        <span id="report-date" class="meta-value">01/01/2024</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Datos del vehículo -->
+                        <div class="report-section">
+                            <div class="section-header">
+                                <div class="section-icon">
+                                    <i class="fas fa-car"></i>
+                                </div>
+                                <h3>DATOS DEL VEHÍCULO</h3>
+                            </div>
+                            <div class="section-content">
+                                <div class="data-grid">
+                                    <div class="data-item">
+                                        <span class="data-label">Vehículo:</span>
+                                        <span id="report-vehicle" class="data-value">-</span>
+                                    </div>
+                                    <div class="data-item">
+                                        <span class="data-label">Dominio:</span>
+                                        <span id="report-plate" class="data-value">-</span>
+                                    </div>
+                                    <div class="data-item">
+                                        <span class="data-label">Kilometraje:</span>
+                                        <span id="report-mileage" class="data-value">-</span>
+                                    </div>
+                                    <div class="data-item">
+                                        <span class="data-label">Fecha de Inspección:</span>
+                                        <span id="report-inspection-date" class="data-value">-</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Resumen ejecutivo -->
+                        <div class="report-section">
+                            <div class="section-header">
+                                <div class="section-icon">
+                                    <i class="fas fa-chart-pie"></i>
+                                </div>
+                                <h3>RESUMEN EJECUTIVO</h3>
+                            </div>
+                            <div class="section-content">
+                                <div class="executive-summary" id="executive-summary">
+                                    <p>Complete la evaluación para generar el resumen ejecutivo.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Resultado de evaluación -->
+                        <div class="report-section">
+                            <div class="section-header">
+                                <div class="section-icon">
+                                    <i class="fas fa-clipboard-check"></i>
+                                </div>
+                                <h3>RESULTADO DE EVALUACIÓN</h3>
+                            </div>
+                            <div class="section-content">
+                                <div class="evaluation-result-report" id="evaluation-result-report">
+                                    <div class="result-status incomplete">
+                                        <i class="fas fa-clock"></i>
+                                        <span>EVALUACIÓN INCOMPLETA</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Detalle de componentes -->
+                        <div class="report-section">
+                            <div class="section-header">
+                                <div class="section-icon">
+                                    <i class="fas fa-tasks"></i>
+                                </div>
+                                <h3>DETALLE DE COMPONENTES</h3>
+                            </div>
+                            <div class="section-content">
+                                <div class="components-detail" id="components-detail">
+                                    <p class="placeholder">Los detalles de componentes aparecerán aquí.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Observaciones y recomendaciones -->
+                        <div class="report-section">
+                            <div class="section-header">
+                                <div class="section-icon">
+                                    <i class="fas fa-comments"></i>
+                                </div>
+                                <h3>OBSERVACIONES Y RECOMENDACIONES</h3>
+                            </div>
+                            <div class="section-content">
+                                <div class="observations" id="report-observations">
+                                    <p>Complete la evaluación para ver observaciones detalladas.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Firmas y validación -->
+                        <div class="report-section">
+                            <div class="section-header">
+                                <div class="section-icon">
+                                    <i class="fas fa-signature"></i>
+                                </div>
+                                <h3>VALIDACIÓN DEL INFORME</h3>
+                            </div>
+                            <div class="section-content">
+                                <div class="validation-section">
+                                    <div class="signature-area">
+                                        <div class="signature-line"></div>
+                                        <p class="signature-label">Inspector Responsable</p>
+                                    </div>
+                                    <div class="disclaimer">
+                                        <p><strong>Nota importante:</strong> Este informe es una evaluación técnica preliminar. Se recomienda una inspección mecánica completa antes de proceder con cualquier transacción.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Footer del informe -->
+                        <div class="report-footer">
+                            <div class="footer-content">
+                                <div class="company-info">
+                                    <p class="company-name">AKINA CHECK - Sistema de Evaluación Vehicular</p>
+                                    <p class="company-contact">info@akinacheck.com | www.akinacheck.com</p>
+                                </div>
+                                <div class="developed-by">
+                                    <p>Desarrollado por <strong>AFM Solutions</strong> | afmsolutions.com.ar</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- Bloque comercial -->
-        <section class="commercial-block card">
-            <div class="commercial-content">
-                <div class="commercial-icon">💼</div>
-                <div class="commercial-text">
-                    <h3>Versión Profesional Disponible</h3>
-                    <p>Esta es la versión demo. La versión completa incluye: historial ilimitado, cálculo automático de costos de reparación, plantillas personalizables y exportación avanzada.</p>
-                    <button class="contact-btn" id="contact-btn">Solicitar versión completa</button>
+            <!-- Nota comercial (discreta) -->
+            <div class="commercial-note">
+                <div class="note-content">
+                    <i class="fas fa-info-circle"></i>
+                    <p>Esta es una versión de demostración. Para acceder a funcionalidades completas como historial, múltiples usuarios y reportes avanzados, contacte a nuestro equipo comercial.</p>
                 </div>
             </div>
-        </section>
-
-        <!-- Vista previa del informe -->
-        <section class="report-preview card">
-            <div class="preview-header">
-                <h2>📄 Vista Previa del Informe</h2>
-                <div class="preview-controls">
-                    <button class="preview-toggle" id="toggle-preview">Mostrar/Ocultar</button>
-                </div>
-            </div>
-            
-            <div class="report-container" id="report-preview">
-                <div class="report-header">
-                    <div class="report-brand">
-                        <h1 class="report-logo">Akina Check</h1>
-                        <p class="report-subtitle">Sistema Inteligente de Evaluación Vehicular</p>
-                        <div class="report-id">ID: <span id="report-id">AK-001</span></div>
-                    </div>
-                    <div class="report-meta">
-                        <p><strong>Fecha:</strong> <span id="report-fecha">-</span></p>
-                        <p><strong>Inspector:</strong> <span id="report-inspector">Usuario Demo</span></p>
-                    </div>
-                </div>
-                
-                <div class="report-section">
-                    <h3>Resumen Ejecutivo</h3>
-                    <div class="executive-summary" id="executive-summary">
-                        <!-- Generado dinámicamente -->
-                    </div>
-                </div>
-                
-                <div class="report-section">
-                    <h3>Recomendación Inteligente</h3>
-                    <div class="intelligent-recommendation" id="intelligent-recommendation">
-                        <!-- Generado dinámicamente -->
-                    </div>
-                </div>
-                
-                <div class="report-section">
-                    <h3>Análisis por Capas</h3>
-                    <div class="report-layers" id="report-layers">
-                        <!-- Generado dinámicamente -->
-                    </div>
-                </div>
-                
-                <div class="report-section">
-                    <h3>Checklist Detallado</h3>
-                    <div class="report-checklist" id="report-checklist">
-                        <!-- Generado dinámicamente -->
-                    </div>
-                </div>
-                
-                <div class="report-footer">
-                    <div class="disclaimer">
-                        <p><strong>Nota importante:</strong> Este informe es generado por el Sistema Inteligente Akina Check y debe ser validado por un profesional certificado.</p>
-                    </div>
-                    <div class="signature">
-                        <div class="signature-line"></div>
-                        <p>Inspector / Responsable de la evaluación</p>
-                    </div>
-                    <div class="developed-by">
-                        <p>Desarrollado por AFM Solutions — afmsolutions.com.ar</p>
-                        <p class="version">Versión demo 2.0 - Sistema Inteligente por Capas</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+        </div>
     </main>
-
-    <!-- Panel de acción flotante -->
-    <div class="action-panel">
-        <button class="action-btn primary" id="download-pdf">
-            <span class="btn-icon">📥</span>
-            <span class="btn-text">Descargar PDF Inteligente</span>
-        </button>
-        <button class="action-btn secondary" id="quick-summary">
-            <span class="btn-icon">📋</span>
-            <span class="btn-text">Resumen Rápido</span>
-        </button>
-    </div>
 
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
-                <div class="footer-brand">
-                    <p class="footer-logo">Akina Check</p>
-                    <p class="footer-tagline">Sistema Inteligente de Evaluación</p>
+                <div class="footer-left">
+                    <p>&copy; 2024 Akina Check. Todos los derechos reservados.</p>
                 </div>
-                <div class="footer-info">
-                    <p>Desarrollado por AFM Solutions — afmsolutions.com.ar</p>
-                    <p class="copyright">© 2024 - Todos los derechos reservados</p>
+                <div class="footer-right">
+                    <p>Desarrollado por <strong>AFM Solutions</strong> | afmsolutions.com.ar</p>
                 </div>
             </div>
         </div>
     </footer>
 
-    <!-- Modal de reglas -->
-    <div class="modal" id="rules-modal">
+    <!-- Modal de guía -->
+    <div class="modal" id="guide-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>🧠 Reglas del Sistema Inteligente</h3>
-                <button class="modal-close" id="close-rules">&times;</button>
+                <h3><i class="fas fa-question-circle"></i> Guía de Evaluación</h3>
+                <button class="modal-close" id="close-guide">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="rules-container">
-                    <!-- Contenido generado dinámicamente -->
-                </div>
+                <!-- Contenido de la guía -->
             </div>
         </div>
     </div>
