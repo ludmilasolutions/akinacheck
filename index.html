@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akina Check - Informe de Inspección Vehicular</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <!-- Cabecera fija -->
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">Akina Check</h1>
+        </div>
+    </header>
+
+    <main class="main-content container">
+        <!-- Formulario de datos del vehículo -->
+        <section class="form-section card">
+            <h2>Datos del Vehículo</h2>
+            <form id="vehicle-form">
+                <div class="form-group">
+                    <label for="fecha">Fecha de Inspección</label>
+                    <input type="date" id="fecha" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="vehiculo">Vehículo</label>
+                    <input type="text" id="vehiculo" placeholder="Ej: Toyota Corolla 2018" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="dominio">Dominio/Matrícula</label>
+                    <input type="text" id="dominio" placeholder="Ej: ABC123" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="kilometraje">Kilometraje</label>
+                    <input type="number" id="kilometraje" placeholder="Ej: 75000" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="observacion">Observación General</label>
+                    <textarea id="observacion" placeholder="Observaciones generales sobre el vehículo..." maxlength="200"></textarea>
+                    <div class="char-counter"><span id="char-count">0</span>/200 caracteres</div>
+                </div>
+            </form>
+            
+            <!-- Bloque comercial -->
+            <div class="commercial-block">
+                <p>Versión de muestra. Para guardar informes, usuarios e historial, contactanos.</p>
+            </div>
+        </section>
+
+        <!-- Semáforo de compra -->
+        <section class="traffic-light-section card">
+            <h2>Recomendación de Compra</h2>
+            <div class="traffic-light">
+                <div class="light green" id="light-green">
+                    <div class="light-icon">🟢</div>
+                    <div class="light-label">Comprar</div>
+                </div>
+                <div class="light yellow" id="light-yellow">
+                    <div class="light-icon">🟡</div>
+                    <div class="light-label">Comprar renegociando</div>
+                </div>
+                <div class="light red" id="light-red">
+                    <div class="light-icon">🔴</div>
+                    <div class="light-label">No comprar</div>
+                </div>
+            </div>
+            <div class="traffic-light-result">
+                <p id="traffic-light-text">Complete el checklist para ver la recomendación</p>
+            </div>
+        </section>
+
+        <!-- Checklist guiado -->
+        <section class="checklist-section card">
+            <h2>Checklist de Inspección</h2>
+            <p class="section-subtitle">Seleccione el estado de cada componente</p>
+            
+            <div class="checklist-container" id="checklist-container">
+                <!-- Los ítems del checklist se generarán dinámicamente con JavaScript -->
+            </div>
+        </section>
+
+        <!-- Vista previa del informe -->
+        <section class="report-preview card">
+            <h2>Vista Previa del Informe</h2>
+            <div class="report-container" id="report-preview">
+                <div class="report-header">
+                    <h1 class="report-logo">Akina Check</h1>
+                    <h2 class="report-title">Informe de Inspección Vehicular</h2>
+                </div>
+                
+                <div class="report-section">
+                    <h3>Datos del Vehículo</h3>
+                    <div class="report-data">
+                        <p><strong>Fecha:</strong> <span id="report-fecha">-</span></p>
+                        <p><strong>Vehículo:</strong> <span id="report-vehiculo">-</span></p>
+                        <p><strong>Dominio:</strong> <span id="report-dominio">-</span></p>
+                        <p><strong>Kilometraje:</strong> <span id="report-kilometraje">-</span> km</p>
+                        <p><strong>Observación General:</strong> <span id="report-observacion">-</span></p>
+                    </div>
+                </div>
+                
+                <div class="report-section">
+                    <h3>Recomendación</h3>
+                    <div class="report-traffic-light" id="report-traffic-light">
+                        <p>Complete el checklist para ver la recomendación</p>
+                    </div>
+                </div>
+                
+                <div class="report-section">
+                    <h3>Checklist de Inspección</h3>
+                    <div class="report-checklist" id="report-checklist">
+                        <p>Los resultados del checklist aparecerán aquí</p>
+                    </div>
+                </div>
+                
+                <div class="report-footer">
+                    <p class="developed-by">Desarrollado por AFM Solutions — afmsolutions.com.ar</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Botón fijo para descargar PDF -->
+    <div class="download-btn-container">
+        <button id="download-pdf" class="download-btn">Descargar informe (PDF)</button>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>Desarrollado por AFM Solutions — afmsolutions.com.ar</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
