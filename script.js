@@ -1,1191 +1,1101 @@
-// 🧠 SISTEMA INTELIGENTE POR CAPAS - AKINA CHECK
+// ============================================
+// AKINA CHECK - SISTEMA PROFESIONAL
+// Versión para inspectores y clientes exigentes
+// ============================================
 
-// ==================== CAPA 1: CLASIFICACIÓN DE ÍTEMS ====================
-const checklistData = [
-    // CATEGORÍA CRÍTICA (Alto peso)
+// Configuración inicial
+const SYSTEM_CONFIG = {
+    companyName: "AKINA CHECK",
+    companyContact: "info@akinacheck.com | www.akinacheck.com",
+    developer: "AFM Solutions | afmsolutions.com.ar",
+    version: "v2.0 Profesional"
+};
+
+// Base de datos de componentes
+const COMPONENTS_DB = [
+    // CATEGORÍA CRÍTICA
     {
         id: 1,
         name: "Motor",
         category: "critical",
-        weight: "alto",
-        phrases: {
-            ok: "Funciona correctamente, sin ruidos anormales ni pérdidas de fluidos.",
-            warning: "Presenta leves ruidos o vibraciones, requiere mantenimiento preventivo.",
-            problem: "Presenta fallas graves que comprometen el funcionamiento. No comprar sin reparación."
-        },
-        impact: "Alto - Compromete funcionamiento básico del vehículo"
+        weight: 10,
+        description: "Sistema motor completo, incluye bloque, culata, distribución y sistemas auxiliares.",
+        evaluationGuide: "Verificar ruidos anormales, vibraciones, pérdidas de fluidos, humo en escape y funcionamiento en frío/caliente.",
+        okPhrase: "Funciona correctamente, sin ruidos anormales ni pérdidas. Respuesta adecuada al acelerador.",
+        warningPhrase: "Presenta leves ruidos o vibraciones. Puede requerir ajustes o mantenimiento preventivo.",
+        problemPhrase: "Presenta fallas graves, pérdidas importantes de fluidos o ruidos metálicos. Requiere reparación inmediata."
     },
     {
         id: 2,
         name: "Transmisión",
         category: "critical",
-        weight: "alto",
-        phrases: {
-            ok: "Cambios suaves y precisos en toda la gama de revoluciones.",
-            warning: "Algunos cambios pueden ser bruscos, requiere revisión técnica.",
-            problem: "Problemas graves de transmisión que requieren reparación costosa."
-        },
-        impact: "Alto - Reparación muy costosa"
+        weight: 9,
+        description: "Sistema de transmisión (manual o automática) y embrague.",
+        evaluationGuide: "Probar cambios en toda la gama, verificar ruidos, patinajes y respuesta.",
+        okPhrase: "Cambios suaves y precisos en toda la gama de revoluciones. Embrague en buen estado.",
+        warningPhrase: "Algunos cambios pueden ser bruscos o presentar ruidos leves. Requiere verificación.",
+        problemPhrase: "Problemas graves de transmisión: patinaje, ruidos fuertes o cambios que no ingresan."
     },
     
-    // CATEGORÍA LEGAL (Alto peso)
+    // CATEGORÍA LEGAL/DOCUMENTACIÓN
     {
         id: 3,
         name: "Documentación",
         category: "legal",
-        weight: "alto",
-        phrases: {
-            ok: "Toda la documentación está en orden y actualizada.",
-            warning: "Falta algún documento menor o requiere actualizaciones simples.",
-            problem: "Documentación incompleta o irregularidades graves. Imposible transferir."
-        },
-        impact: "Alto - Puede impedir la compra legal"
-    },
-    {
-        id: 4,
-        name: "Verificación policial",
-        category: "legal",
-        weight: "alto",
-        phrases: {
-            ok: "Verificación policial al día, sin observaciones.",
-            warning: "Verificación vencida, requiere renovación.",
-            problem: "Observaciones graves en verificación policial."
-        },
-        impact: "Alto - Requisito legal obligatorio"
+        weight: 10,
+        description: "Documentación legal del vehículo y verificaciones.",
+        evaluationGuide: "Verificar título, cédula verde/azul, VTV, póliza de seguro y libre deuda.",
+        okPhrase: "Toda la documentación está en orden y actualizada. Verificación policial al día.",
+        warningPhrase: "Falta algún documento menor o requiere actualizaciones simples.",
+        problemPhrase: "Documentación incompleta o irregularidades graves. Imposible transferir legalmente."
     },
     
-    // CATEGORÍA SEGURIDAD (Peso medio)
+    // CATEGORÍA IMPORTANTE (SEGURIDAD/CONFIABILIDAD)
+    {
+        id: 4,
+        name: "Sistema de Frenos",
+        category: "important",
+        weight: 8,
+        description: "Frenos delanteros, traseros, servofreno y líquido de frenos.",
+        evaluationGuide: "Probar frenado en diferentes velocidades, verificar desgaste de pastillas/discos.",
+        okPhrase: "Frenado eficiente y uniforme en todas las ruedas. Pastillas y discos en buen estado.",
+        warningPhrase: "Frenado ligeramente desigual o ruidos leves al frenar. Desgaste moderado.",
+        problemPhrase: "Frenado deficiente, vibraciones al frenar o pérdida de líquido. Peligro inminente."
+    },
     {
         id: 5,
-        name: "Frenos",
-        category: "security",
-        weight: "medio",
-        phrases: {
-            ok: "Sistema de frenos eficiente y uniforme en todas las ruedas.",
-            warning: "Frenado ligeramente desigual o ruidos leves al frenar.",
-            problem: "Frenado deficiente o pérdida de líquido de frenos. Peligro inminente."
-        },
-        impact: "Medio - Seguridad activa comprometida"
+        name: "Suspensión y Dirección",
+        category: "important",
+        weight: 7,
+        description: "Amortiguadores, rótulas, terminales y sistema de dirección.",
+        evaluationGuide: "Probar en curvas, baches y verificar ruidos, holguras.",
+        okPhrase: "Suspensión estable y dirección precisa. Sin ruidos ni holguras anormales.",
+        warningPhrase: "Leves ruidos en suspensión o ligera holgura en dirección.",
+        problemPhrase: "Amortiguadores dañados, holgura excesiva o inestabilidad en curva."
     },
     {
         id: 6,
-        name: "Suspensión",
-        category: "security",
-        weight: "medio",
-        phrases: {
-            ok: "Suspensión en buen estado, sin ruidos ni pérdidas.",
-            warning: "Leves ruidos o desgaste en componentes de suspensión.",
-            problem: "Amortiguadores dañados o inestabilidad en curva."
-        },
-        impact: "Medio - Confort y seguridad comprometidos"
+        name: "Neumáticos y Alineación",
+        category: "important",
+        weight: 6,
+        description: "Estado de neumáticos, presión y alineación del vehículo.",
+        evaluationGuide: "Verificar dibujo, daños, presión y desgaste irregular.",
+        okPhrase: "Neumáticos con buen dibujo, presión correcta y alineación adecuada.",
+        warningPhrase: "Desgaste irregular o presión ligeramente incorrecta. Requiere rotación/alineación.",
+        problemPhrase: "Neumáticos lisos, dañados o presión muy incorrecta. Peligro de accidente."
     },
+    
+    // CATEGORÍA SECUNDARIA (CONFORT/ESTÉTICA)
     {
         id: 7,
-        name: "Dirección",
-        category: "security",
-        weight: "medio",
-        phrases: {
-            ok: "Dirección precisa, sin holguras ni ruidos anormales.",
-            warning: "Ligera holgura en la dirección que requiere ajuste.",
-            problem: "Holgura excesiva o dirección pesada. Peligroso para conducir."
-        },
-        impact: "Medio - Control del vehículo comprometido"
+        name: "Carrocería y Pintura",
+        category: "secondary",
+        weight: 3,
+        description: "Estado general de la carrocería, pintura y ausencia de corrosión.",
+        evaluationGuide: "Inspeccionar en buena luz, buscar golpes, rayones, óxido y reparaciones.",
+        okPhrase: "Sin abolladuras importantes, oxidación ni daños en la pintura.",
+        warningPhrase: "Algunas marcas menores, rayones superficiales o pequeños puntos de óxido.",
+        problemPhrase: "Abolladuras importantes, oxidación severa o reparaciones mal realizadas."
     },
     {
         id: 8,
-        name: "Neumáticos",
-        category: "security",
-        weight: "medio",
-        phrases: {
-            ok: "Neumáticos con buen dibujo, presión correcta y sin daños.",
-            warning: "Desgaste irregular que requiere rotación o alineación.",
-            problem: "Neumáticos lisos o dañados. Peligro de accidente."
-        },
-        impact: "Medio - Seguridad activa crítica"
+        name: "Interiores y Tapicería",
+        category: "secondary",
+        weight: 2,
+        description: "Estado de asientos, paneles, techo y accesorios interiores.",
+        evaluationGuide: "Verificar desgaste, roturas, manchas y funcionamiento de accesorios.",
+        okPhrase: "Interiores en buen estado, sin roturas ni desgastes excesivos.",
+        warningPhrase: "Desgaste moderado en asientos o paneles, pequeños detalles a reparar.",
+        problemPhrase: "Roturas importantes, tapizados dañados o malos olores persistentes."
     },
-    
-    // CATEGORÍA MECÁNICA (Peso medio)
     {
         id: 9,
-        name: "Sistema eléctrico",
-        category: "mechanical",
-        weight: "medio",
-        phrases: {
-            ok: "Todos los componentes eléctricos funcionan correctamente.",
-            warning: "Algunos accesorios eléctricos presentan fallas intermitentes.",
-            problem: "Fallas eléctricas importantes que afectan funcionamiento."
-        },
-        impact: "Medio - Puede dejar varado el vehículo"
+        name: "Sistema Eléctrico",
+        category: "secondary",
+        weight: 4,
+        description: "Luces, instrumentos, accesorios eléctricos y batería.",
+        evaluationGuide: "Probar todas las luces, instrumentos y accesorios eléctricos.",
+        okPhrase: "Todos los componentes eléctricos funcionan correctamente.",
+        warningPhrase: "Algunos accesorios eléctricos pueden presentar fallas intermitentes.",
+        problemPhrase: "Fallas eléctricas importantes, batería deficiente o alternador defectuoso."
     },
     {
         id: 10,
-        name: "Aire acondicionado",
-        category: "mechanical",
-        weight: "medio",
-        phrases: {
-            ok: "Funciona correctamente en frío y calor.",
-            warning: "Enfría/calienta lentamente o con capacidad reducida.",
-            problem: "No funciona o tiene fugas importantes."
-        },
-        impact: "Medio - Confort y valor de reventa"
-    },
-    {
-        id: 11,
-        name: "Escape",
-        category: "mechanical",
-        weight: "medio",
-        phrases: {
-            ok: "Sistema de escape íntegro, sin ruidos ni fugas.",
-            warning: "Leves ruidos o pequeñas fugas en el escape.",
-            problem: "Fugas importantes o catalizador defectuoso."
-        },
-        impact: "Medio - Contaminación y rendimiento"
-    },
-    
-    // CATEGORÍA ESTÉTICA (Peso bajo)
-    {
-        id: 12,
-        name: "Carrocería",
-        category: "aesthetic",
-        weight: "bajo",
-        phrases: {
-            ok: "Sin abolladuras, oxidación ni daños importantes.",
-            warning: "Algunas marcas menores, rayones o pequeños puntos de óxido.",
-            problem: "Abolladuras importantes u oxidación severa."
-        },
-        impact: "Bajo - Valor estético y de reventa"
-    },
-    {
-        id: 13,
-        name: "Interiores",
-        category: "aesthetic",
-        weight: "bajo",
-        phrases: {
-            ok: "Interiores en buen estado, sin roturas ni desgastes.",
-            warning: "Desgaste moderado en asientos o paneles.",
-            problem: "Roturas importantes o tapizados dañados."
-        },
-        impact: "Bajo - Confort y presentación"
-    },
-    {
-        id: 14,
-        name: "Luces",
-        category: "aesthetic",
-        weight: "bajo",
-        phrases: {
-            ok: "Todas las luces funcionan correctamente.",
-            warning: "Alguna luz no funciona o tiene opacidad.",
-            problem: "Varias luces no funcionan o ópticas rotas."
-        },
-        impact: "Bajo - Estética y seguridad básica"
-    },
-    {
-        id: 15,
-        name: "Vidrios y espejos",
-        category: "aesthetic",
-        weight: "bajo",
-        phrases: {
-            ok: "Todos los vidrios y espejos en buen estado.",
-            warning: "Pequeñas fisuras o ralladuras menores.",
-            problem: "Vidrios rotos o espejos dañados."
-        },
-        impact: "Bajo - Estética y funcionalidad básica"
+        name: "Aire Acondicionado y Climatización",
+        category: "secondary",
+        weight: 3,
+        description: "Sistema de aire acondicionado, calefacción y ventilación.",
+        evaluationGuide: "Probar en frío y calor máximo, verificar ruidos y olores.",
+        okPhrase: "Funciona correctamente, enfriando y calentando según especificaciones.",
+        warningPhrase: "Enfría/calienta lentamente o con capacidad reducida.",
+        problemPhrase: "No funciona, tiene fugas importantes o necesita recarga de gas."
     }
 ];
 
-// ==================== CAPA 2: REGLAS PROFESIONALES ====================
-const professionalRules = [
-    {
-        id: "rule-1",
-        name: "Regla de Críticos",
-        condition: "Problemas en categorías críticas (Motor, Transmisión)",
-        action: "🔴 NO COMPRAR",
-        description: "Problemas en componentes críticos comprometen el funcionamiento básico del vehículo. Reparaciones muy costosas.",
-        priority: 1
-    },
-    {
-        id: "rule-2",
-        name: "Regla Legal",
-        condition: "Problemas en categoría legal (Documentación)",
-        action: "🔴 NO COMPRAR",
-        description: "Sin documentación en orden, no se puede transferir legalmente el vehículo.",
-        priority: 2
-    },
-    {
-        id: "rule-3",
-        name: "Regla de Seguridad Múltiple",
-        condition: "2+ problemas en categoría seguridad",
-        action: "🔴 NO COMPRAR",
-        description: "Múltiples problemas de seguridad representan peligro inminente.",
-        priority: 3
-    },
-    {
-        id: "rule-4",
-        name: "Regla de Seguridad Simple",
-        condition: "1 problema en categoría seguridad",
-        action: "🟡 RENEGOCIAR",
-        description: "Un problema de seguridad requiere reparación inmediata. Restar costo de la oferta.",
-        priority: 4
-    },
-    {
-        id: "rule-5",
-        name: "Regla Mecánica",
-        condition: "Problemas en categoría mecánica",
-        action: "🟡 RENEGOCIAR",
-        description: "Problemas mecánicos afectan confiabilidad. Considerar en el precio.",
-        priority: 5
-    },
-    {
-        id: "rule-6",
-        name: "Regla Estética Pura",
-        condition: "Solo problemas estéticos (sin otros problemas)",
-        action: "🟢 COMPRAR",
-        description: "Problemas solo estéticos no afectan funcionamiento. Buen punto de negociación.",
-        priority: 6
-    },
-    {
-        id: "rule-7",
-        name: "Regla de Advertencias",
-        condition: "Solo advertencias en cualquier categoría",
-        action: "🟡 RENEGOCIAR",
-        description: "Advertencias indican mantenimiento necesario. Pida descuento por mantenimientos pendientes.",
-        priority: 7
-    },
-    {
-        id: "rule-8",
-        name: "Regla Perfecta",
-        condition: "Todo OK",
-        action: "🟢 COMPRAR",
-        description: "Vehículo en excelente estado. Verificar que el precio sea justo de mercado.",
-        priority: 8
-    }
-];
-
-// ==================== ESTADO DE LA APLICACIÓN ====================
-const appState = {
-    // CAPA 1: Clasificación
-    checklist: {},
-    
-    // CAPA 2: Estado + Peso
-    analysis: {
-        critical: { problems: 0, warnings: 0 },
-        legal: { problems: 0, warnings: 0 },
-        security: { problems: 0, warnings: 0 },
-        mechanical: { problems: 0, warnings: 0 },
-        aesthetic: { problems: 0, warnings: 0 }
-    },
-    
-    // CAPA 3: Reglas aplicadas
-    appliedRules: [],
-    
-    // CAPA 4: Recomendación del sistema
-    systemRecommendation: null,
-    systemExplanation: "",
-    
-    // CAPA 5: Decisión del inspector
-    inspectorDecision: null,
-    inspectorOverride: false,
-    overrideReason: "",
-    
-    // Datos generales
-    formData: {
+// Estado de la aplicación
+const AppState = {
+    // Datos del vehículo
+    vehicle: {
         fecha: "",
         vehiculo: "",
         dominio: "",
         kilometraje: "",
         observacion: ""
-    }
+    },
+    
+    // Evaluación de componentes
+    evaluation: {},
+    
+    // Resultados
+    results: {
+        critical: { problems: 0, warnings: 0, items: [] },
+        important: { problems: 0, warnings: 0, items: [] },
+        secondary: { problems: 0, warnings: 0, items: [] },
+        legal: { problems: 0, warnings: 0, items: [] }
+    },
+    
+    // Recomendación
+    recommendation: {
+        system: null, // 'approved', 'conditional', 'not-recommended'
+        inspector: null,
+        adjusted: false,
+        adjustmentReason: "",
+        explanation: ""
+    },
+    
+    // Configuración
+    inspectorName: "Inspector Demo",
+    reportNumber: "INSP-001"
 };
 
-// ==================== INICIALIZACIÓN ====================
+// Inicialización
 document.addEventListener('DOMContentLoaded', function() {
     // Configurar fecha actual
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('fecha').value = today;
-    appState.formData.fecha = formatDate(today);
+    const today = new Date();
+    const formattedDate = formatDate(today);
+    document.getElementById('fecha').valueAsDate = today;
+    document.getElementById('current-date').textContent = formattedDate;
+    AppState.vehicle.fecha = formattedDate;
     
-    // Generar ID único
-    document.getElementById('report-id').textContent = 'AK-' + 
-        Date.now().toString().substr(-6);
+    // Generar número de informe
+    const reportNum = `INSP-${String(today.getTime()).slice(-6)}`;
+    AppState.reportNumber = reportNum;
+    document.getElementById('report-number').textContent = reportNum;
+    document.getElementById('report-id').textContent = reportNum;
     
-    // Inicializar checklist
-    initializeIntelligentChecklist();
+    // Inicializar componentes
+    initializeComponents();
     
     // Inicializar eventos
-    initializeFormEvents();
-    initializeTrafficLightEvents();
-    initializeActionButtons();
+    initializeEvents();
     
-    // Inicializar modal de reglas
-    initializeRulesModal();
+    // Inicializar vista previa
+    updateReportPreview();
     
-    // Actualizar vista
-    updateAllDisplays();
+    // Inicializar guía de evaluación
+    initializeEvaluationGuide();
+    
+    console.log(`✅ ${SYSTEM_CONFIG.companyName} ${SYSTEM_CONFIG.version} inicializado correctamente`);
 });
 
-// ==================== CAPA 1: INICIALIZAR CHECKLIST INTELIGENTE ====================
-function initializeIntelligentChecklist() {
+// Inicializar componentes del checklist
+function initializeComponents() {
     const container = document.getElementById('checklist-container');
-    const tabsContainer = document.getElementById('category-tabs');
-    
-    // Limpiar contenedores
     container.innerHTML = '';
-    tabsContainer.innerHTML = '';
     
-    // Crear tabs por categoría
-    const categories = ['all', 'critical', 'legal', 'security', 'mechanical', 'aesthetic'];
-    const categoryNames = {
-        all: 'Todos',
-        critical: 'Críticos',
-        legal: 'Legales',
-        security: 'Seguridad',
-        mechanical: 'Mecánicos',
-        aesthetic: 'Estéticos'
-    };
-    
-    categories.forEach(category => {
-        const tab = document.createElement('button');
-        tab.className = 'category-tab';
-        tab.textContent = categoryNames[category];
-        tab.dataset.category = category;
-        if (category === 'all') tab.classList.add('active');
-        
-        tab.addEventListener('click', function() {
-            // Actualizar tabs activos
-            document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
-            this.classList.add('active');
-            
-            // Filtrar items
-            filterChecklistItems(category);
-        });
-        
-        tabsContainer.appendChild(tab);
-    });
-    
-    // Crear items del checklist
-    checklistData.forEach(item => {
+    COMPONENTS_DB.forEach(component => {
         // Inicializar estado
-        appState.checklist[item.id] = {
+        AppState.evaluation[component.id] = {
             status: null,
-            category: item.category,
-            weight: item.weight,
-            impact: item.impact
+            category: component.category,
+            weight: component.weight,
+            evaluated: false
         };
         
-        // Crear elemento
-        const itemElement = document.createElement('div');
-        itemElement.className = 'checklist-item';
-        itemElement.dataset.category = item.category;
-        itemElement.dataset.id = item.id;
+        // Crear elemento HTML
+        const item = document.createElement('div');
+        item.className = 'checklist-item';
+        item.dataset.id = component.id;
+        item.dataset.category = component.category;
         
-        itemElement.innerHTML = `
-            <div class="item-header">
-                <div class="item-title">
-                    ${item.name}
-                    <span class="item-category ${item.category}">${getCategoryLabel(item.category)}</span>
+        item.innerHTML = `
+            <div class="checklist-item-header">
+                <div class="checklist-item-title">
+                    <div class="checklist-item-name">${component.name}</div>
+                    <div class="checklist-item-category ${component.category}">
+                        ${getCategoryLabel(component.category)} • Peso: ${component.weight}/10
+                    </div>
                 </div>
-                <div class="item-weight">Peso: ${item.weight}</div>
+                <div class="checklist-item-actions">
+                    <button class="btn-status ok" data-status="ok">
+                        <i class="fas fa-check"></i> OK
+                    </button>
+                    <button class="btn-status warning" data-status="warning">
+                        <i class="fas fa-exclamation"></i> Atención
+                    </button>
+                    <button class="btn-status problem" data-status="problem">
+                        <i class="fas fa-times"></i> Problema
+                    </button>
+                </div>
             </div>
-            
-            <div class="status-buttons">
-                <button class="status-btn ok" data-id="${item.id}" data-status="ok">
-                    <span>✅</span> OK
-                </button>
-                <button class="status-btn warning" data-id="${item.id}" data-status="warning">
-                    <span>⚠️</span> Atención
-                </button>
-                <button class="status-btn problem" data-id="${item.id}" data-status="problem">
-                    <span>❌</span> Problema
-                </button>
-            </div>
-            
-            <div class="status-phrase" id="phrase-${item.id}"></div>
-            
-            <div class="item-impact">
-                <small>Impacto: ${item.impact}</small>
+            <div class="checklist-item-details" id="details-${component.id}">
+                <p class="checklist-item-description">
+                    <strong>Descripción:</strong> ${component.description}
+                </p>
+                <p class="checklist-item-guide">
+                    <strong>Guía de evaluación:</strong> ${component.evaluationGuide}
+                </p>
+                <div class="checklist-item-impact" id="impact-${component.id}">
+                    <!-- Se completará dinámicamente -->
+                </div>
             </div>
         `;
         
-        container.appendChild(itemElement);
+        container.appendChild(item);
         
         // Agregar eventos a los botones
-        const buttons = itemElement.querySelectorAll('.status-btn');
+        const buttons = item.querySelectorAll('.btn-status');
         buttons.forEach(button => {
             button.addEventListener('click', function() {
-                const id = parseInt(this.dataset.id);
+                const componentId = parseInt(item.dataset.id);
                 const status = this.dataset.status;
-                updateChecklistItem(id, status);
+                evaluateComponent(componentId, status);
             });
+        });
+        
+        // Mostrar/ocultar detalles al hacer clic en el título
+        const title = item.querySelector('.checklist-item-title');
+        title.addEventListener('click', function() {
+            const details = document.getElementById(`details-${component.id}`);
+            details.classList.toggle('show');
         });
     });
 }
 
-function getCategoryLabel(category) {
-    const labels = {
-        critical: 'Crítico',
-        legal: 'Legal',
-        security: 'Seguridad',
-        mechanical: 'Mecánico',
-        aesthetic: 'Estético'
-    };
-    return labels[category] || category;
-}
-
-function filterChecklistItems(category) {
-    const items = document.querySelectorAll('.checklist-item');
-    
-    items.forEach(item => {
-        if (category === 'all' || item.dataset.category === category) {
-            item.style.display = 'block';
-        } else {
-            item.style.display = 'none';
-        }
-    });
-}
-
-// ==================== CAPA 2: ACTUALIZAR ÍTEM DEL CHECKLIST ====================
-function updateChecklistItem(id, status) {
-    const itemData = checklistData.find(item => item.id === id);
-    
-    // Actualizar estado
-    appState.checklist[id].status = status;
-    
-    // Actualizar interfaz
+// Evaluar un componente
+function evaluateComponent(id, status) {
+    const component = COMPONENTS_DB.find(c => c.id === id);
     const itemElement = document.querySelector(`.checklist-item[data-id="${id}"]`);
     
-    // Resetear botones
-    const buttons = itemElement.querySelectorAll('.status-btn');
-    buttons.forEach(button => {
-        button.classList.remove('active');
-        if (button.dataset.status === status) {
-            button.classList.add('active');
+    // Actualizar estado
+    AppState.evaluation[id].status = status;
+    AppState.evaluation[id].evaluated = true;
+    
+    // Actualizar UI del componente
+    const buttons = itemElement.querySelectorAll('.btn-status');
+    buttons.forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.status === status) {
+            btn.classList.add('active');
         }
     });
     
-    // Mostrar frase
-    const phraseElement = document.getElementById(`phrase-${id}`);
-    phraseElement.textContent = itemData.phrases[status];
-    phraseElement.classList.add('show');
+    // Mostrar frase de impacto
+    const impactElement = document.getElementById(`impact-${id}`);
+    let impactPhrase = '';
+    let statusClass = '';
     
-    // Actualizar análisis por capas
-    updateLayerAnalysis();
+    switch(status) {
+        case 'ok':
+            impactPhrase = component.okPhrase;
+            statusClass = 'ok';
+            break;
+        case 'warning':
+            impactPhrase = component.warningPhrase;
+            statusClass = 'warning';
+            break;
+        case 'problem':
+            impactPhrase = component.problemPhrase;
+            statusClass = 'problem';
+            break;
+    }
     
-    // Aplicar reglas profesionales
-    applyProfessionalRules();
+    impactElement.innerHTML = `
+        <p><strong>Evaluación:</strong> <span class="status-${statusClass}">${impactPhrase}</span></p>
+    `;
     
-    // Actualizar todas las visualizaciones
-    updateAllDisplays();
-}
-
-// ==================== CAPA 2: ANÁLISIS POR CAPAS ====================
-function updateLayerAnalysis() {
-    // Resetear análisis
-    Object.keys(appState.analysis).forEach(category => {
-        appState.analysis[category] = { problems: 0, warnings: 0 };
-    });
-    
-    // Contar problemas y advertencias por categoría
-    Object.entries(appState.checklist).forEach(([id, data]) => {
-        if (data.status === 'problem') {
-            appState.analysis[data.category].problems++;
-        } else if (data.status === 'warning') {
-            appState.analysis[data.category].warnings++;
-        }
-    });
+    // Mostrar detalles
+    document.getElementById(`details-${id}`).classList.add('show');
     
     // Actualizar estadísticas
-    const totalEvaluated = Object.values(appState.checklist).filter(item => item.status !== null).length;
-    document.getElementById('checklist-stats').innerHTML = `
-        <span class="stat-item">${totalEvaluated}/15 evaluados</span>
-    `;
+    updateStatistics();
+    
+    // Actualizar recomendación
+    updateRecommendation();
+    
+    // Actualizar vista previa
+    updateReportPreview();
 }
 
-// ==================== CAPA 3: APLICAR REGLAS PROFESIONALES ====================
-function applyProfessionalRules() {
-    appState.appliedRules = [];
+// Actualizar estadísticas
+function updateStatistics() {
+    // Resetear contadores
+    AppState.results = {
+        critical: { problems: 0, warnings: 0, items: [] },
+        important: { problems: 0, warnings: 0, items: [] },
+        secondary: { problems: 0, warnings: 0, items: [] },
+        legal: { problems: 0, warnings: 0, items: [] }
+    };
     
-    // Obtener conteos actualizados
-    const criticalProblems = appState.analysis.critical.problems;
-    const legalProblems = appState.analysis.legal.problems;
-    const securityProblems = appState.analysis.security.problems;
-    const mechanicalProblems = appState.analysis.mechanical.problems;
-    const aestheticProblems = appState.analysis.aesthetic.problems;
+    // Contar por categoría
+    Object.entries(AppState.evaluation).forEach(([id, data]) => {
+        if (data.evaluated) {
+            const component = COMPONENTS_DB.find(c => c.id == id);
+            
+            switch(data.status) {
+                case 'problem':
+                    AppState.results[data.category].problems++;
+                    AppState.results[data.category].items.push({
+                        id: parseInt(id),
+                        name: component.name,
+                        status: 'problem'
+                    });
+                    break;
+                case 'warning':
+                    AppState.results[data.category].warnings++;
+                    AppState.results[data.category].items.push({
+                        id: parseInt(id),
+                        name: component.name,
+                        status: 'warning'
+                    });
+                    break;
+                default:
+                    AppState.results[data.category].items.push({
+                        id: parseInt(id),
+                        name: component.name,
+                        status: 'ok'
+                    });
+            }
+        }
+    });
     
-    // Contar totales
-    const totalProblems = criticalProblems + legalProblems + securityProblems + mechanicalProblems + aestheticProblems;
-    const totalWarnings = Object.values(appState.analysis).reduce((sum, cat) => sum + cat.warnings, 0);
+    // Actualizar UI de estadísticas
+    updateStatisticsUI();
+}
+
+// Actualizar UI de estadísticas
+function updateStatisticsUI() {
+    // Contadores rápidos
+    let totalProblems = 0;
+    let totalWarnings = 0;
+    let totalOk = 0;
+    let totalEvaluated = 0;
     
-    // Aplicar reglas en orden de prioridad
+    Object.values(AppState.results).forEach(category => {
+        totalProblems += category.problems;
+        totalWarnings += category.warnings;
+        totalEvaluated += category.items.length;
+    });
+    
+    totalOk = totalEvaluated - totalProblems - totalWarnings;
+    
+    document.getElementById('critical-indicator').textContent = totalProblems;
+    document.getElementById('warning-indicator').textContent = totalWarnings;
+    document.getElementById('ok-indicator').textContent = totalOk;
+    document.getElementById('evaluated-indicator').textContent = `${totalEvaluated}/${COMPONENTS_DB.length}`;
+    
+    // Contadores por categoría
+    document.getElementById('critical-count').textContent = AppState.results.critical.problems;
+    document.getElementById('important-count').textContent = AppState.results.important.problems;
+    document.getElementById('secondary-count').textContent = AppState.results.secondary.problems;
+    
+    // Actualizar estado del resumen
+    const summaryStatus = document.getElementById('summary-status');
+    if (totalEvaluated === 0) {
+        summaryStatus.innerHTML = `
+            <div class="status-badge incomplete">
+                <i class="fas fa-clock"></i> Evaluación Incompleta
+            </div>
+        `;
+    } else if (totalProblems === 0 && totalWarnings === 0) {
+        summaryStatus.innerHTML = `
+            <div class="status-badge approved">
+                <i class="fas fa-check-circle"></i> Sin Problemas Detectados
+            </div>
+        `;
+    } else {
+        summaryStatus.innerHTML = `
+            <div class="status-badge conditional">
+                <i class="fas fa-exclamation-triangle"></i> ${totalProblems} Problemas, ${totalWarnings} Advertencias
+            </div>
+        `;
+    }
+    
+    // Actualizar detalles por categoría
+    updateCategoryDetails();
+}
+
+// Actualizar detalles por categoría
+function updateCategoryDetails() {
+    const container = document.getElementById('category-details');
+    
+    let html = '';
+    
+    // Críticos
+    if (AppState.results.critical.items.length > 0) {
+        html += `
+            <div class="detail-card">
+                <div class="detail-card-header">
+                    <h4><i class="fas fa-times-circle"></i> Componentes Críticos</h4>
+                    <span class="detail-count">${AppState.results.critical.items.length} items</span>
+                </div>
+                <div class="detail-card-items">
+                    ${AppState.results.critical.items.map(item => `
+                        <div class="detail-item">
+                            <span class="detail-item-name">${item.name}</span>
+                            <span class="detail-item-status ${item.status}">
+                                ${item.status === 'ok' ? 'OK' : item.status === 'warning' ? 'Atención' : 'Problema'}
+                            </span>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+    
+    // Importantes
+    if (AppState.results.important.items.length > 0) {
+        html += `
+            <div class="detail-card">
+                <div class="detail-card-header">
+                    <h4><i class="fas fa-exclamation-circle"></i> Componentes Importantes</h4>
+                    <span class="detail-count">${AppState.results.important.items.length} items</span>
+                </div>
+                <div class="detail-card-items">
+                    ${AppState.results.important.items.map(item => `
+                        <div class="detail-item">
+                            <span class="detail-item-name">${item.name}</span>
+                            <span class="detail-item-status ${item.status}">
+                                ${item.status === 'ok' ? 'OK' : item.status === 'warning' ? 'Atención' : 'Problema'}
+                            </span>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+    
+    // Secundarios
+    if (AppState.results.secondary.items.length > 0) {
+        html += `
+            <div class="detail-card">
+                <div class="detail-card-header">
+                    <h4><i class="fas fa-check-circle"></i> Componentes Secundarios</h4>
+                    <span class="detail-count">${AppState.results.secondary.items.length} items</span>
+                </div>
+                <div class="detail-card-items">
+                    ${AppState.results.secondary.items.map(item => `
+                        <div class="detail-item">
+                            <span class="detail-item-name">${item.name}</span>
+                            <span class="detail-item-status ${item.status}">
+                                ${item.status === 'ok' ? 'OK' : item.status === 'warning' ? 'Atención' : 'Problema'}
+                            </span>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+    
+    container.innerHTML = html || '<p class="placeholder">No hay componentes evaluados.</p>';
+}
+
+// Actualizar recomendación
+function updateRecommendation() {
+    const totalEvaluated = Object.values(AppState.evaluation).filter(e => e.evaluated).length;
+    
+    if (totalEvaluated === 0) {
+        AppState.recommendation.system = null;
+        AppState.recommendation.explanation = "Complete la evaluación para obtener una recomendación.";
+        updateRecommendationUI();
+        return;
+    }
+    
+    // Reglas profesionales
     let recommendation = null;
     let explanation = "";
     
-    // REGLA 1: Problemas en críticos
-    if (criticalProblems > 0) {
-        recommendation = "red";
-        explanation = `❌ NO COMPRAR - Se detectaron ${criticalProblems} problema(s) en componentes críticos (Motor/Transmisión). Estos comprometen el funcionamiento básico del vehículo.`;
-        appState.appliedRules.push(professionalRules[0]);
+    // 1. Problemas en componentes críticos o legales
+    if (AppState.results.critical.problems > 0 || AppState.results.legal.problems > 0) {
+        recommendation = "not-recommended";
+        
+        let problems = [];
+        if (AppState.results.critical.problems > 0) problems.push(`${AppState.results.critical.problems} crítico(s)`);
+        if (AppState.results.legal.problems > 0) problems.push(`${AppState.results.legal.problems} legal(es)`);
+        
+        explanation = `NO RECOMENDADO - Se detectaron ${problems.join(' y ')}. `;
+        explanation += "Estos problemas comprometen la seguridad, funcionamiento básico o legalidad del vehículo.";
     }
     
-    // REGLA 2: Problemas legales
-    else if (legalProblems > 0) {
-        recommendation = "red";
-        explanation = `❌ NO COMPRAR - Se detectaron ${legalProblems} problema(s) en documentación legal. Sin documentación en orden, no se puede transferir legalmente el vehículo.`;
-        appState.appliedRules.push(professionalRules[1]);
+    // 2. Múltiples problemas importantes
+    else if (AppState.results.important.problems >= 2) {
+        recommendation = "not-recommended";
+        explanation = `NO RECOMENDADO - Se detectaron ${AppState.results.important.problems} problemas en componentes importantes. `;
+        explanation += "Múltiples fallas de seguridad o confiabilidad representan un riesgo significativo.";
     }
     
-    // REGLA 3: Múltiples problemas de seguridad
-    else if (securityProblems >= 2) {
-        recommendation = "red";
-        explanation = `❌ NO COMPRAR - Se detectaron ${securityProblems} problemas en componentes de seguridad. Múltiples fallas de seguridad representan peligro inminente.`;
-        appState.appliedRules.push(professionalRules[2]);
+    // 3. Un problema importante
+    else if (AppState.results.important.problems === 1) {
+        recommendation = "conditional";
+        explanation = "CONDICIONAL - Se detectó 1 problema en componente importante. ";
+        explanation += "Requiere reparación antes de la compra o reducción significativa del precio.";
     }
     
-    // REGLA 4: Un problema de seguridad
-    else if (securityProblems === 1) {
-        recommendation = "yellow";
-        explanation = `🟡 RENEGOCIAR - Se detectó 1 problema en componentes de seguridad. Requiere reparación inmediata. Reste el costo de reparación del precio ofertado.`;
-        appState.appliedRules.push(professionalRules[3]);
+    // 4. Solo problemas secundarios
+    else if (AppState.results.secondary.problems > 0 && 
+             AppState.results.critical.problems === 0 && 
+             AppState.results.important.problems === 0) {
+        recommendation = "approved";
+        explanation = "APROBADO - Los problemas detectados son solo estéticos o de mantenimiento preventivo. ";
+        explanation += "No afectan la seguridad o funcionamiento básico del vehículo.";
     }
     
-    // REGLA 5: Problemas mecánicos
-    else if (mechanicalProblems > 0) {
-        recommendation = "yellow";
-        explanation = `🟡 RENEGOCIAR - Se detectaron ${mechanicalProblems} problema(s) mecánicos. Afectan la confiabilidad del vehículo. Considere estos costos en la negociación.`;
-        appState.appliedRules.push(professionalRules[4]);
+    // 5. Solo advertencias
+    else if (Object.values(AppState.results).every(cat => cat.problems === 0) && 
+             (AppState.results.critical.warnings > 0 || 
+              AppState.results.important.warnings > 0 || 
+              AppState.results.secondary.warnings > 0)) {
+        recommendation = "conditional";
+        explanation = "CONDICIONAL - Se detectaron advertencias que requieren mantenimiento preventivo. ";
+        explanation += "Recomendado ajustar el precio según los trabajos necesarios.";
     }
     
-    // REGLA 6: Solo problemas estéticos
-    else if (aestheticProblems > 0 && totalProblems === aestheticProblems) {
-        recommendation = "green";
-        explanation = `🟢 COMPRAR - Los ${aestheticProblems} problema(s) detectados son solo estéticos. No afectan el funcionamiento del vehículo. Buen punto para negociar un descuento.`;
-        appState.appliedRules.push(professionalRules[5]);
-    }
-    
-    // REGLA 7: Solo advertencias
-    else if (totalWarnings > 0 && totalProblems === 0) {
-        recommendation = "yellow";
-        explanation = `🟡 RENEGOCIAR - Se detectaron ${totalWarnings} advertencia(s). Indican mantenimiento necesario. Pida descuento por los mantenimientos pendientes.`;
-        appState.appliedRules.push(professionalRules[6]);
-    }
-    
-    // REGLA 8: Todo OK
-    else if (totalProblems === 0 && totalWarnings === 0 && Object.values(appState.checklist).some(item => item.status === 'ok')) {
-        recommendation = "green";
-        explanation = `🟢 COMPRAR - El vehículo se encuentra en excelente estado. Verifique que el precio sea justo de mercado según valores de referencia.`;
-        appState.appliedRules.push(professionalRules[7]);
-    }
-    
-    // Sin evaluación completa
-    else {
-        recommendation = null;
-        explanation = "Complete la evaluación para ver la recomendación del sistema.";
+    // 6. Todo OK
+    else if (Object.values(AppState.results).every(cat => cat.problems === 0 && cat.warnings === 0) && 
+             totalEvaluated === COMPONENTS_DB.length) {
+        recommendation = "approved";
+        explanation = "APROBADO - El vehículo se encuentra en excelente estado general. ";
+        explanation += "Todos los componentes evaluados funcionan correctamente.";
     }
     
     // Guardar recomendación del sistema
-    appState.systemRecommendation = recommendation;
-    appState.systemExplanation = explanation;
+    AppState.recommendation.system = recommendation;
     
-    // Si el inspector no ha hecho override, usar la recomendación del sistema
-    if (!appState.inspectorOverride) {
-        appState.inspectorDecision = recommendation;
+    // Si no hay ajuste del inspector, usar recomendación del sistema
+    if (!AppState.recommendation.adjusted) {
+        AppState.recommendation.inspector = recommendation;
+        AppState.recommendation.explanation = explanation;
     }
+    
+    updateRecommendationUI();
 }
 
-// ==================== CAPA 4: ACTUALIZAR INTERFAZ ====================
-function updateAllDisplays() {
-    updateTrafficLightDisplay();
-    updateExplanationDisplay();
-    updateLayerAnalysisDisplay();
-    updateReportPreview();
-    updateClassificationSummary();
-}
-
-function updateTrafficLightDisplay() {
-    // Resetear todas las luces
-    document.querySelectorAll('.intelligent-light').forEach(light => {
+// Actualizar UI de recomendación
+function updateRecommendationUI() {
+    const recommendation = AppState.recommendation.inspector;
+    
+    // Resetear luces
+    document.querySelectorAll('.result-light').forEach(light => {
         light.classList.remove('active');
     });
     
-    // Activar luz según decisión actual
-    const decision = appState.inspectorDecision;
-    if (decision) {
-        const lightElement = document.getElementById(`light-${decision}`);
+    // Activar luz correspondiente
+    if (recommendation) {
+        const lightElement = document.getElementById(`result-${recommendation}`);
         if (lightElement) {
             lightElement.classList.add('active');
         }
     }
-}
-
-function updateExplanationDisplay() {
-    const container = document.getElementById('auto-explanation');
     
-    if (appState.inspectorOverride) {
-        container.innerHTML = `
-            <div class="explanation-override">
-                <div class="override-header">
-                    <span class="override-icon">👨‍🔧</span>
-                    <strong>Decisión profesional del inspector</strong>
+    // Actualizar explicación
+    const explanationElement = document.getElementById('result-explanation');
+    if (AppState.recommendation.adjusted) {
+        explanationElement.innerHTML = `
+            <div class="explanation-adjusted">
+                <div class="adjusted-header">
+                    <i class="fas fa-user-edit"></i>
+                    <strong>Evaluación Ajustada por el Inspector</strong>
                 </div>
-                <p>${appState.systemExplanation}</p>
-                <div class="override-reason">
+                <p>${AppState.recommendation.explanation}</p>
+                <div class="adjustment-note">
                     <strong>Motivo del ajuste:</strong>
-                    <p>${appState.overrideReason || "Criterio profesional del inspector."}</p>
+                    <p>${AppState.recommendation.adjustmentReason}</p>
                 </div>
                 <div class="system-note">
-                    <small>Recomendación original del sistema: ${getRecommendationText(appState.systemRecommendation)}</small>
+                    <small><i class="fas fa-robot"></i> Recomendación original del sistema: ${getRecommendationText(AppState.recommendation.system)}</small>
                 </div>
             </div>
         `;
-    } else if (appState.systemExplanation) {
-        container.innerHTML = `
+    } else {
+        explanationElement.innerHTML = `
             <div class="explanation-system">
                 <div class="system-header">
-                    <span class="system-icon">🤖</span>
-                    <strong>Análisis automatizado del sistema</strong>
+                    <i class="fas fa-clipboard-check"></i>
+                    <strong>Evaluación del Sistema</strong>
                 </div>
-                <p>${appState.systemExplanation}</p>
-                ${appState.appliedRules.length > 0 ? `
-                    <div class="applied-rules">
-                        <strong>Regla aplicada:</strong> ${appState.appliedRules[0].name}
-                    </div>
-                ` : ''}
-            </div>
-        `;
-    } else {
-        container.innerHTML = '<p class="placeholder">Complete el checklist para ver el análisis inteligente.</p>';
-    }
-}
-
-function getRecommendationText(recommendation) {
-    switch(recommendation) {
-        case 'green': return '🟢 COMPRAR';
-        case 'yellow': return '🟡 RENEGOCIAR';
-        case 'red': return '🔴 NO COMPRAR';
-        default: return 'Sin recomendación';
-    }
-}
-
-function updateLayerAnalysisDisplay() {
-    // Actualizar análisis de capa 1
-    const classificationSummary = document.getElementById('classification-summary');
-    if (classificationSummary) {
-        classificationSummary.innerHTML = `
-            <div class="category-summary">
-                <div class="summary-item">
-                    <span class="summary-label">Críticos:</span>
-                    <span class="summary-value">${appState.analysis.critical.problems} problemas, ${appState.analysis.critical.warnings} advertencias</span>
-                </div>
-                <div class="summary-item">
-                    <span class="summary-label">Legales:</span>
-                    <span class="summary-value">${appState.analysis.legal.problems} problemas, ${appState.analysis.legal.warnings} advertencias</span>
-                </div>
-                <div class="summary-item">
-                    <span class="summary-label">Seguridad:</span>
-                    <span class="summary-value">${appState.analysis.security.problems} problemas, ${appState.analysis.security.warnings} advertencias</span>
-                </div>
-                <div class="summary-item">
-                    <span class="summary-label">Mecánicos:</span>
-                    <span class="summary-value">${appState.analysis.mechanical.problems} problemas, ${appState.analysis.mechanical.warnings} advertencias</span>
-                </div>
-                <div class="summary-item">
-                    <span class="summary-label">Estéticos:</span>
-                    <span class="summary-value">${appState.analysis.aesthetic.problems} problemas, ${appState.analysis.aesthetic.warnings} advertencias</span>
-                </div>
+                <p>${AppState.recommendation.explanation || 'Complete la evaluación para ver el análisis.'}</p>
             </div>
         `;
     }
-    
-    // Actualizar análisis de capa 2
-    const weightAnalysis = document.getElementById('weight-analysis');
-    if (weightAnalysis) {
-        let analysisText = '';
-        
-        if (appState.analysis.critical.problems > 0) {
-            analysisText += `<p>❌ <strong>Problemas críticos</strong> detectados. Alto impacto en decisión de compra.</p>`;
-        }
-        if (appState.analysis.legal.problems > 0) {
-            analysisText += `<p>❌ <strong>Problemas legales</strong> detectados. Impedimento para transferencia.</p>`;
-        }
-        if (appState.analysis.security.problems > 0) {
-            analysisText += `<p>⚠️ <strong>Problemas de seguridad</strong> detectados. Impacto medio en decisión.</p>`;
-        }
-        if (appState.analysis.mechanical.problems > 0) {
-            analysisText += `<p>⚠️ <strong>Problemas mecánicos</strong> detectados. Afectan confiabilidad.</p>`;
-        }
-        if (appState.analysis.aesthetic.problems > 0 && 
-            appState.analysis.critical.problems === 0 &&
-            appState.analysis.legal.problems === 0 &&
-            appState.analysis.security.problems === 0 &&
-            appState.analysis.mechanical.problems === 0) {
-            analysisText += `<p>✅ <strong>Problemas solo estéticos</strong>. Bajo impacto en decisión.</p>`;
-        }
-        
-        weightAnalysis.innerHTML = analysisText || '<p>Complete la evaluación para ver el análisis.</p>';
-    }
-    
-    // Actualizar reglas aplicadas
-    const rulesApplied = document.getElementById('rules-applied');
-    if (rulesApplied && appState.appliedRules.length > 0) {
-        const rulesHtml = appState.appliedRules.map(rule => `
-            <div class="rule-item">
-                <div class="rule-header">
-                    <strong>${rule.name}</strong>
-                    <span class="rule-action">${rule.action}</span>
-                </div>
-                <div class="rule-condition">
-                    <small>Condición: ${rule.condition}</small>
-                </div>
-                <div class="rule-description">
-                    ${rule.description}
-                </div>
-            </div>
-        `).join('');
-        
-        rulesApplied.innerHTML = rulesHtml;
-    } else {
-        rulesApplied.innerHTML = '<p>Complete la evaluación para ver las reglas aplicadas.</p>';
-    }
 }
 
-function updateClassificationSummary() {
-    // Esta función actualiza el resumen de clasificación en tiempo real
-    // Se podría expandir para mostrar más detalles
-}
-
-// ==================== CAPA 5: CONTROL DEL INSPECTOR ====================
-function initializeTrafficLightEvents() {
-    // Evento para aceptar recomendación AI
-    document.getElementById('accept-ai').addEventListener('change', function() {
-        if (this.checked) {
-            appState.inspectorOverride = false;
-            appState.inspectorDecision = appState.systemRecommendation;
-            document.getElementById('manual-adjustment').style.display = 'none';
-            updateAllDisplays();
-        }
-    });
-    
-    // Evento para ajustar manualmente
-    document.getElementById('adjust-ai').addEventListener('change', function() {
-        if (this.checked) {
-            document.getElementById('manual-adjustment').style.display = 'block';
-        }
-    });
-    
-    // Botones de ajuste manual
-    document.querySelectorAll('.manual-light-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const status = this.dataset.status;
-            
-            // Preguntar por el motivo del ajuste
-            const reason = prompt('Por favor, explique brevemente por qué ajusta la recomendación del sistema:');
-            
-            if (reason !== null) {
-                appState.inspectorOverride = true;
-                appState.inspectorDecision = status;
-                appState.overrideReason = reason;
-                
-                // Actualizar estado
-                document.getElementById('status-message').innerHTML = `
-                    <span class="status-icon">👨‍🔧</span>
-                    <span class="status-text">Decisión profesional activa (${getRecommendationText(status)})</span>
-                `;
-                
-                updateAllDisplays();
-            }
-        });
-    });
-}
-
-// ==================== FORMULARIO Y EVENTOS ====================
-function initializeFormEvents() {
-    // Fecha
+// Inicializar eventos
+function initializeEvents() {
+    // Formulario del vehículo
     document.getElementById('fecha').addEventListener('change', function() {
-        appState.formData.fecha = formatDate(this.value);
+        AppState.vehicle.fecha = formatDate(new Date(this.value));
         updateReportPreview();
     });
     
-    // Vehículo
     document.getElementById('vehiculo').addEventListener('input', function() {
-        appState.formData.vehiculo = this.value;
+        AppState.vehicle.vehiculo = this.value;
         updateReportPreview();
     });
     
-    // Dominio
     document.getElementById('dominio').addEventListener('input', function() {
-        appState.formData.dominio = this.value.toUpperCase();
-        this.value = appState.formData.dominio;
+        AppState.vehicle.dominio = this.value.toUpperCase();
+        this.value = AppState.vehicle.dominio;
         updateReportPreview();
     });
     
-    // Kilometraje
     document.getElementById('kilometraje').addEventListener('input', function() {
-        appState.formData.kilometraje = this.value;
+        AppState.vehicle.kilometraje = formatNumber(this.value);
         updateReportPreview();
     });
     
-    // Observación
     document.getElementById('observacion').addEventListener('input', function() {
-        appState.formData.observacion = this.value;
+        AppState.vehicle.observacion = this.value;
         document.getElementById('char-count').textContent = this.value.length;
         updateReportPreview();
     });
     
-    // Reset checklist
-    document.getElementById('reset-checklist').addEventListener('click', function() {
+    // Botón de expandir todo
+    document.getElementById('checklist-expand').addEventListener('click', function() {
+        document.querySelectorAll('.checklist-item-details').forEach(details => {
+            details.classList.add('show');
+        });
+        this.innerHTML = '<i class="fas fa-compress"></i> Contraer Todo';
+        this.dataset.expanded = 'true';
+        
+        // Cambiar a contraer
+        this.removeEventListener('click', arguments.callee);
+        this.addEventListener('click', function() {
+            document.querySelectorAll('.checklist-item-details').forEach(details => {
+                details.classList.remove('show');
+            });
+            this.innerHTML = '<i class="fas fa-expand"></i> Expandir Todo';
+            this.dataset.expanded = 'false';
+            
+            // Volver a expandir
+            this.removeEventListener('click', arguments.callee);
+            this.addEventListener('click', arguments.callee);
+        });
+    });
+    
+    // Botón de reiniciar
+    document.getElementById('checklist-reset').addEventListener('click', function() {
         if (confirm('¿Está seguro de reiniciar toda la evaluación? Se perderán todas las selecciones.')) {
-            initializeIntelligentChecklist();
-            appState.inspectorOverride = false;
-            appState.inspectorDecision = null;
-            appState.overrideReason = '';
-            updateAllDisplays();
+            initializeComponents();
+            updateStatistics();
+            updateRecommendation();
+            updateReportPreview();
         }
     });
-}
-
-// ==================== MODAL DE REGLAS ====================
-function initializeRulesModal() {
-    const modal = document.getElementById('rules-modal');
-    const showBtn = document.getElementById('show-rules');
-    const closeBtn = document.getElementById('close-rules');
     
-    // Cargar reglas en el modal
-    const rulesContainer = document.querySelector('.rules-container');
-    rulesContainer.innerHTML = professionalRules.map(rule => `
-        <div class="rule-modal-item">
-            <div class="rule-modal-header">
-                <h4>${rule.name}</h4>
-                <span class="rule-modal-action">${rule.action}</span>
-            </div>
-            <div class="rule-modal-body">
-                <p><strong>Condición:</strong> ${rule.condition}</p>
-                <p><strong>Descripción:</strong> ${rule.description}</p>
-                <p class="rule-priority"><small>Prioridad: ${rule.priority}</small></p>
-            </div>
-        </div>
-    `).join('');
-    
-    // Mostrar modal
-    showBtn.addEventListener('click', function() {
-        modal.style.display = 'flex';
+    // Ajuste de recomendación
+    document.getElementById('toggle-recommendation').addEventListener('click', function() {
+        const adjustmentPanel = document.getElementById('manual-adjustment');
+        adjustmentPanel.style.display = adjustmentPanel.style.display === 'none' ? 'block' : 'none';
     });
     
-    // Cerrar modal
-    closeBtn.addEventListener('click', function() {
-        modal.style.display = 'none';
-    });
-    
-    // Cerrar al hacer clic fuera
-    window.addEventListener('click', function(event) {
-        if (event.target === modal) {
-            modal.style.display = 'none';
-        }
-    });
-}
-
-// ==================== BOTONES DE ACCIÓN ====================
-function initializeActionButtons() {
-    // Descargar PDF
-    document.getElementById('download-pdf').addEventListener('click', generatePDF);
-    
-    // Resumen rápido
-    document.getElementById('quick-summary').addEventListener('click', function() {
-        if (!appState.inspectorDecision) {
-            alert('Complete la evaluación primero.');
+    document.getElementById('confirm-adjustment').addEventListener('click', function() {
+        const selectedValue = document.getElementById('manual-recommendation').value;
+        const reason = document.getElementById('adjustment-reason').value;
+        
+        if (!selectedValue) {
+            alert('Por favor, seleccione una recomendación.');
             return;
         }
         
-        const summary = generateQuickSummary();
-        alert(summary);
+        if (!reason.trim()) {
+            alert('Por favor, ingrese el motivo del ajuste.');
+            return;
+        }
+        
+        AppState.recommendation.adjusted = true;
+        AppState.recommendation.inspector = selectedValue;
+        AppState.recommendation.adjustmentReason = reason;
+        
+        // Generar explicación para la recomendación ajustada
+        const recommendationText = getRecommendationText(selectedValue);
+        AppState.recommendation.explanation = `${recommendationText} - Ajuste realizado por criterio profesional del inspector.`;
+        
+        // Ocultar panel de ajuste
+        document.getElementById('manual-adjustment').style.display = 'none';
+        
+        // Actualizar UI
+        updateRecommendationUI();
+        updateReportPreview();
     });
     
-    // Contactar
-    document.getElementById('contact-btn').addEventListener('click', function() {
-        alert('📧 Contacto para versión profesional:\n\nEmail: profesional@akinacheck.com\nTeléfono: +54 9 11 1234-5678\n\nCaracterísticas profesionales:\n✓ Historial ilimitado\n✓ Cálculo automático de costos\n✓ Plantillas personalizables\n✓ Exportación avanzada\n✓ Soporte técnico');
+    document.getElementById('cancel-adjustment').addEventListener('click', function() {
+        document.getElementById('manual-adjustment').style.display = 'none';
     });
     
-    // Toggle preview
+    // Generar PDF
+    document.getElementById('generate-pdf').addEventListener('click', generatePDF);
+    
+    // Mostrar/ocultar vista previa
     document.getElementById('toggle-preview').addEventListener('click', function() {
         const preview = document.getElementById('report-preview');
         preview.style.display = preview.style.display === 'none' ? 'block' : 'none';
-        this.textContent = preview.style.display === 'none' ? 'Mostrar' : 'Ocultar';
+        this.innerHTML = preview.style.display === 'none' ? 
+            '<i class="fas fa-eye"></i> Mostrar' : 
+            '<i class="fas fa-eye-slash"></i> Ocultar';
+    });
+    
+    // Guía de evaluación
+    document.getElementById('evaluation-guide').addEventListener('click', function() {
+        document.getElementById('guide-modal').style.display = 'flex';
+    });
+    
+    document.getElementById('close-guide').addEventListener('click', function() {
+        document.getElementById('guide-modal').style.display = 'none';
     });
 }
 
-// ==================== VISTA PREVIA DEL INFORME ====================
+// Inicializar guía de evaluación
+function initializeEvaluationGuide() {
+    const modalBody = document.querySelector('#guide-modal .modal-body');
+    
+    modalBody.innerHTML = `
+        <div class="guide-content">
+            <h4>Guía de Evaluación Profesional</h4>
+            
+            <div class="guide-section">
+                <h5><i class="fas fa-exclamation-triangle"></i> Componentes Críticos</h5>
+                <p>Estos componentes son esenciales para el funcionamiento básico y seguridad del vehículo. Cualquier problema aquí es motivo de rechazo o requiere reparación completa antes de la compra.</p>
+                <ul>
+                    <li><strong>Motor:</strong> Verificar ruidos, vibraciones, pérdidas, humo y respuesta</li>
+                    <li><strong>Transmisión:</strong> Probar todos los cambios, embrague y respuesta</li>
+                    <li><strong>Documentación:</strong> Completar antes de cualquier evaluación técnica</li>
+                </ul>
+            </div>
+            
+            <div class="guide-section">
+                <h5><i class="fas fa-exclamation-circle"></i> Componentes Importantes</h5>
+                <p>Afectan directamente la seguridad y confiabilidad. Problemas aquí deben ser considerados en el precio o reparados.</p>
+                <ul>
+                    <li><strong>Frenos:</strong> Eficiencia, uniformidad y estado de componentes</li>
+                    <li><strong>Suspensión/Dirección:</strong> Estabilidad, ruidos y holguras</li>
+                    <li><strong>Neumáticos:</strong> Dibujo, daños y alineación</li>
+                </ul>
+            </div>
+            
+            <div class="guide-section">
+                <h5><i class="fas fa-check-circle"></i> Componentes Secundarios</h5>
+                <p>Afectan el confort, estética y valor de reventa. Usualmente no son motivo de rechazo pero afectan el precio.</p>
+                <ul>
+                    <li><strong>Carrocería:</strong> Golpes, óxido y calidad de reparaciones</li>
+                    <li><strong>Interiores:</strong> Desgaste, roturas y funcionamiento</li>
+                    <li><strong>Sistemas eléctricos y climatización:</strong> Funcionamiento completo</li>
+                </ul>
+            </div>
+            
+            <div class="guide-tips">
+                <h5><i class="fas fa-lightbulb"></i> Consejos Profesionales</h5>
+                <ul>
+                    <li>Evalúe en orden de importancia (críticos primero)</li>
+                    <li>Documente cada hallazgo con fotos cuando sea posible</li>
+                    <li>Considere el contexto (vehículo antiguo vs nuevo)</li>
+                    <li>Sea conservador en evaluaciones dudosas</li>
+                    <li>Explique claramente sus hallazgos al cliente</li>
+                </ul>
+            </div>
+        </div>
+    `;
+}
+
+// Actualizar vista previa del informe
 function updateReportPreview() {
     // Datos básicos
-    document.getElementById('report-fecha').textContent = appState.formData.fecha || '-';
-    document.getElementById('report-vehiculo').textContent = appState.formData.vehiculo || '-';
+    document.getElementById('report-date').textContent = AppState.vehicle.fecha || '-';
+    document.getElementById('report-vehicle').textContent = AppState.vehicle.vehiculo || '-';
+    document.getElementById('report-plate').textContent = AppState.vehicle.dominio || '-';
+    document.getElementById('report-mileage').textContent = AppState.vehicle.kilometraje ? `${AppState.vehicle.kilometraje} km` : '-';
+    document.getElementById('report-inspection-date').textContent = AppState.vehicle.fecha || '-';
     
     // Resumen ejecutivo
     const executiveSummary = document.getElementById('executive-summary');
-    if (executiveSummary) {
+    const totalEvaluated = Object.values(AppState.evaluation).filter(e => e.evaluated).length;
+    
+    if (totalEvaluated === 0) {
         executiveSummary.innerHTML = `
-            <div class="executive-grid">
-                <div class="executive-item">
-                    <strong>Vehículo:</strong> ${appState.formData.vehiculo || '-'}
-                </div>
-                <div class="executive-item">
-                    <strong>Dominio:</strong> ${appState.formData.dominio || '-'}
-                </div>
-                <div class="executive-item">
-                    <strong>Kilometraje:</strong> ${appState.formData.kilometraje ? appState.formData.kilometraje + ' km' : '-'}
-                </div>
-                <div class="executive-item">
-                    <strong>Estado general:</strong> ${getOverallStatus()}
-                </div>
+            <p>La evaluación del vehículo no ha sido completada. Este informe se actualizará automáticamente cuando se completen las verificaciones.</p>
+        `;
+    } else {
+        let problems = [];
+        let warnings = [];
+        
+        Object.entries(AppState.results).forEach(([category, data]) => {
+            if (data.problems > 0) problems.push(`${data.problems} ${category}`);
+            if (data.warnings > 0) warnings.push(`${data.warnings} ${category}`);
+        });
+        
+        let summaryText = `Se evaluaron ${totalEvaluated} de ${COMPONENTS_DB.length} componentes. `;
+        
+        if (problems.length > 0) {
+            summaryText += `Se detectaron problemas en: ${problems.join(', ')}. `;
+        }
+        
+        if (warnings.length > 0) {
+            summaryText += `Se registraron advertencias en: ${warnings.join(', ')}. `;
+        }
+        
+        if (problems.length === 0 && warnings.length === 0) {
+            summaryText += "No se detectaron problemas ni advertencias significativas. ";
+        }
+        
+        executiveSummary.innerHTML = `<p>${summaryText}</p>`;
+    }
+    
+    // Resultado de evaluación
+    const resultElement = document.getElementById('evaluation-result-report');
+    const recommendation = AppState.recommendation.inspector;
+    
+    if (!recommendation) {
+        resultElement.innerHTML = `
+            <div class="result-status incomplete">
+                <i class="fas fa-clock"></i> EVALUACIÓN INCOMPLETA
+            </div>
+        `;
+    } else {
+        let statusText = '';
+        let statusClass = '';
+        
+        switch(recommendation) {
+            case 'approved':
+                statusText = 'APROBADO PARA COMPRA';
+                statusClass = 'approved';
+                break;
+            case 'conditional':
+                statusText = 'CONDICIONAL - SUJETO A REPARACIONES';
+                statusClass = 'conditional';
+                break;
+            case 'not-recommended':
+                statusText = 'NO RECOMENDADO PARA COMPRA';
+                statusClass = 'not-recommended';
+                break;
+        }
+        
+        resultElement.innerHTML = `
+            <div class="result-status ${statusClass}">
+                <i class="fas ${recommendation === 'approved' ? 'fa-check-circle' : recommendation === 'conditional' ? 'fa-exclamation-triangle' : 'fa-times-circle'}"></i>
+                ${statusText}
+            </div>
+            <div class="result-details">
+                <p>${AppState.recommendation.explanation}</p>
+                ${AppState.recommendation.adjusted ? 
+                    `<p class="adjustment-note"><strong>Nota del inspector:</strong> ${AppState.recommendation.adjustmentReason}</p>` : 
+                    ''
+                }
             </div>
         `;
     }
     
-    // Recomendación inteligente
-    const recommendationElement = document.getElementById('intelligent-recommendation');
-    if (recommendationElement) {
-        if (appState.inspectorDecision) {
-            recommendationElement.innerHTML = `
-                <div class="recommendation-card ${appState.inspectorDecision}">
-                    <div class="recommendation-header">
-                        <h4>${getRecommendationText(appState.inspectorDecision)}</h4>
-                        ${appState.inspectorOverride ? 
-                            '<span class="override-badge">Ajuste profesional</span>' : 
-                            '<span class="ai-badge">Sistema Akina IA</span>'
-                        }
-                    </div>
-                    <div class="recommendation-body">
-                        <p>${appState.systemExplanation}</p>
-                        ${appState.inspectorOverride ? `
-                            <div class="inspector-note">
-                                <strong>👨‍🔧 Ajuste del inspector:</strong>
-                                <p>${appState.overrideReason}</p>
-                            </div>
-                        ` : ''}
-                    </div>
+    // Detalle de componentes
+    const componentsDetail = document.getElementById('components-detail');
+    const evaluatedComponents = Object.entries(AppState.evaluation).filter(([_, data]) => data.evaluated);
+    
+    if (evaluatedComponents.length === 0) {
+        componentsDetail.innerHTML = '<p class="placeholder">No hay componentes evaluados para mostrar.</p>';
+    } else {
+        let componentsHTML = '';
+        
+        evaluatedComponents.forEach(([id, data]) => {
+            const component = COMPONENTS_DB.find(c => c.id == id);
+            let statusText = '';
+            let statusClass = '';
+            
+            switch(data.status) {
+                case 'ok':
+                    statusText = '✓ OK';
+                    statusClass = 'ok';
+                    break;
+                case 'warning':
+                    statusText = '⚠ ATENCIÓN';
+                    statusClass = 'warning';
+                    break;
+                case 'problem':
+                    statusText = '✗ PROBLEMA';
+                    statusClass = 'problem';
+                    break;
+            }
+            
+            componentsHTML += `
+                <div class="component-item">
+                    <span class="component-name">${component.name}</span>
+                    <span class="component-status ${statusClass}">${statusText}</span>
                 </div>
             `;
-        } else {
-            recommendationElement.innerHTML = '<p class="placeholder">Complete la evaluación para ver la recomendación.</p>';
-        }
-    }
-    
-    // Checklist en el informe
-    const reportChecklist = document.getElementById('report-checklist');
-    if (reportChecklist) {
-        const evaluatedItems = Object.entries(appState.checklist)
-            .filter(([_, data]) => data.status !== null);
+        });
         
-        if (evaluatedItems.length > 0) {
-            let checklistHtml = '<div class="report-checklist-items">';
-            
-            evaluatedItems.forEach(([id, data]) => {
-                const itemData = checklistData.find(item => item.id == id);
-                const statusIcon = data.status === 'ok' ? '✅' : data.status === 'warning' ? '⚠️' : '❌';
-                const statusClass = data.status === 'ok' ? 'ok' : data.status === 'warning' ? 'warning' : 'problem';
-                
-                checklistHtml += `
-                    <div class="report-checklist-item ${statusClass}">
-                        <div class="report-item-header">
-                            <span class="report-item-status">${statusIcon}</span>
-                            <span class="report-item-name">${itemData.name}</span>
-                            <span class="report-item-category ${itemData.category}">${getCategoryLabel(itemData.category)}</span>
-                        </div>
-                        <div class="report-item-details">
-                            <p><strong>Estado:</strong> ${data.status === 'ok' ? 'OK' : data.status === 'warning' ? 'Atención' : 'Problema'}</p>
-                            <p><strong>Impacto:</strong> ${itemData.impact}</p>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            checklistHtml += '</div>';
-            reportChecklist.innerHTML = checklistHtml;
-        } else {
-            reportChecklist.innerHTML = '<p class="placeholder">No hay items evaluados en el checklist.</p>';
-        }
+        componentsDetail.innerHTML = componentsHTML;
+    }
+    
+    // Observaciones
+    const observationsElement = document.getElementById('report-observations');
+    
+    if (AppState.vehicle.observacion) {
+        observationsElement.innerHTML = `
+            <p>${AppState.vehicle.observacion}</p>
+            ${AppState.recommendation.adjusted ? 
+                `<div class="inspector-note">
+                    <strong>Ajuste realizado por el inspector:</strong>
+                    <p>${AppState.recommendation.adjustmentReason}</p>
+                </div>` : 
+                ''
+            }
+            <div class="general-recommendations">
+                <p><strong>Recomendaciones generales:</strong></p>
+                <ul>
+                    <li>Realizar una prueba de manejo completa antes de la compra</li>
+                    <li>Verificar el historial de mantenimiento del vehículo</li>
+                    <li>Consultar con un mecánico especializado para confirmar hallazgos</li>
+                    <li>Considerar el costo de reparaciones identificadas en la negociación</li>
+                </ul>
+            </div>
+        `;
+    } else {
+        observationsElement.innerHTML = `
+            <p>No se registraron observaciones específicas del inspector.</p>
+            <div class="general-recommendations">
+                <p><strong>Recomendaciones estándar:</strong></p>
+                <ul>
+                    <li>Realizar una prueba de manejo completa</li>
+                    <li>Verificar historial de mantenimiento</li>
+                    <li>Consultar con mecánico especializado</li>
+                </ul>
+            </div>
+        `;
     }
 }
 
-function getOverallStatus() {
-    const totalProblems = Object.values(appState.analysis).reduce((sum, cat) => sum + cat.problems, 0);
-    const totalWarnings = Object.values(appState.analysis).reduce((sum, cat) => sum + cat.warnings, 0);
-    
-    if (totalProblems > 0) return `${totalProblems} problemas críticos`;
-    if (totalWarnings > 0) return `${totalWarnings} advertencias`;
-    if (Object.values(appState.checklist).some(item => item.status === 'ok')) return 'Buen estado';
-    return 'Por evaluar';
-}
-
-function generateQuickSummary() {
-    if (!appState.inspectorDecision) {
-        return 'Complete la evaluación primero.';
-    }
-    
-    const totalProblems = Object.values(appState.analysis).reduce((sum, cat) => sum + cat.problems, 0);
-    const totalWarnings = Object.values(appState.analysis).reduce((sum, cat) => sum + cat.warnings, 0);
-    
-    return `
-🚗 RESUMEN RÁPIDO - AKINA CHECK
-
-Vehículo: ${appState.formData.vehiculo || 'No especificado'}
-Dominio: ${appState.formData.dominio || 'No especificado'}
-
-📊 EVALUACIÓN:
-• Problemas críticos: ${totalProblems}
-• Advertencias: ${totalWarnings}
-• Items evaluados: ${Object.values(appState.checklist).filter(item => item.status !== null).length}/15
-
-🚦 RECOMENDACIÓN:
-${getRecommendationText(appState.inspectorDecision)}
-${appState.inspectorOverride ? '(Ajustado por criterio profesional)' : '(Recomendación del sistema)'}
-
-💡 ANÁLISIS:
-${appState.systemExplanation}
-
-📝 NOTA:
-${appState.overrideReason || 'Basado en análisis automatizado del sistema.'}
-
----
-Generado por Akina Check - Sistema Inteligente
-    `.trim();
-}
-
-// ==================== FUNCIONES UTILITARIAS ====================
-function formatDate(dateString) {
-    if (!dateString) return "-";
-    
-    const date = new Date(dateString);
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const year = date.getFullYear();
-    
-    return `${day}/${month}/${year}`;
-}
-
-// ==================== GENERACIÓN DE PDF ====================
+// Generar PDF profesional
 async function generatePDF() {
-    if (!appState.inspectorDecision) {
+    const totalEvaluated = Object.values(AppState.evaluation).filter(e => e.evaluated).length;
+    
+    if (totalEvaluated === 0) {
         alert('Complete la evaluación antes de generar el PDF.');
         return;
     }
     
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    
-    // Configuración
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const margin = 20;
-    let yPos = margin;
-    
-    // Logo y título
-    pdf.setFontSize(24);
-    pdf.setTextColor(40, 53, 147);
-    pdf.text('Akina Check', margin, yPos);
-    
-    pdf.setFontSize(12);
-    pdf.setTextColor(100, 100, 100);
-    pdf.text('Sistema Inteligente de Evaluación Vehicular', margin, yPos + 8);
-    
-    yPos += 25;
-    
-    // Línea separadora
-    pdf.setDrawColor(40, 53, 147);
-    pdf.setLineWidth(0.5);
-    pdf.line(margin, yPos, pageWidth - margin, yPos);
-    yPos += 10;
-    
-    // Información del vehículo
-    pdf.setFontSize(14);
-    pdf.setTextColor(0, 0, 0);
-    pdf.text('📋 Datos del Vehículo', margin, yPos);
-    yPos += 10;
-    
-    pdf.setFontSize(10);
-    pdf.text(`Vehículo: ${appState.formData.vehiculo || '-'}`, margin, yPos);
-    pdf.text(`Dominio: ${appState.formData.dominio || '-'}`, pageWidth/2, yPos);
-    yPos += 6;
-    
-    pdf.text(`Fecha: ${appState.formData.fecha || '-'}`, margin, yPos);
-    pdf.text(`Kilometraje: ${appState.formData.kilometraje || '-'} km`, pageWidth/2, yPos);
-    yPos += 15;
-    
-    // Recomendación
-    pdf.setFontSize(14);
-    pdf.text('🚦 Recomendación Inteligente', margin, yPos);
-    yPos += 10;
-    
-    // Color según recomendación
-    let recColor;
-    switch(appState.inspectorDecision) {
-        case 'green': recColor = [46, 125, 50]; break;
-        case 'yellow': recColor = [245, 124, 0]; break;
-        case 'red': recColor = [198, 40, 40]; break;
-        default: recColor = [100, 100, 100];
+    if (!AppState.vehicle.vehiculo || !AppState.vehicle.dominio) {
+        alert('Complete los datos básicos del vehículo antes de generar el PDF.');
+        return;
     }
     
-    pdf.setTextColor(recColor[0], recColor[1], recColor[2]);
-    pdf.setFontSize(16);
-    pdf.text(getRecommendationText(appState.inspectorDecision), margin, yPos);
-    yPos += 8;
-    
-    pdf.setFontSize(10);
-    pdf.setTextColor(0, 0, 0);
-    const explanationLines = pdf.splitTextToSize(appState.systemExplanation, pageWidth - 2*margin);
-    pdf.text(explanationLines, margin, yPos);
-    yPos += explanationLines.length * 5 + 10;
-    
-    // Si hay ajuste del inspector
-    if (appState.inspectorOverride) {
-        pdf.setTextColor(245, 124, 0);
-        pdf.setFontSize(12);
-        pdf.text('👨‍🔧 Ajuste Profesional del Inspector', margin, yPos);
-        yPos += 8;
+    try {
+        // Capturar el contenido del informe
+        const reportContent = document.getElementById('report-preview');
         
-        pdf.setFontSize(10);
-        pdf.setTextColor(0, 0, 0);
-        const reasonLines = pdf.splitTextToSize(appState.overrideReason, pageWidth - 2*margin);
-        pdf.text(reasonLines, margin, yPos);
-        yPos += reasonLines.length * 5 + 10;
-    }
-    
-    // Checklist resumido
-    pdf.setFontSize(14);
-    pdf.setTextColor(0, 0, 0);
-    pdf.text('🔍 Checklist Resumido', margin, yPos);
-    yPos += 10;
-    
-    const evaluatedItems = Object.entries(appState.checklist)
-        .filter(([_, data]) => data.status !== null);
-    
-    evaluatedItems.forEach(([id, data]) => {
-        if (yPos > 250) {
-            pdf.addPage();
-            yPos = margin;
+        // Usar html2canvas para capturar como imagen
+        const canvas = await html2canvas(reportContent, {
+            scale: 2,
+            useCORS: true,
+            logging: false,
+            backgroundColor: '#ffffff'
+        });
+        
+        // Crear PDF
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const margin = 20;
+        
+        // Agregar imagen al PDF
+        const imgData = canvas.toDataURL('image/png');
+        const imgWidth = pageWidth - 2 * margin;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        
+        pdf.addImage(imgData, 'PNG', margin, margin, imgWidth, imgHeight);
+        
+        // Agregar número de página
+        const pageCount = pdf.internal.getNumberOfPages();
+        for (let i = 1; i <= pageCount; i++) {
+            pdf.setPage(i);
+            pdf.setFontSize(8);
+            pdf.setTextColor(100, 100, 100);
+            pdf.text(
+                `Página ${i} de ${pageCount}`,
+                pageWidth - margin - 30,
+                pdf.internal.pageSize.getHeight() - 10
+            );
+            
+            // Agregar marca de agua "Copia de Evaluación"
+            pdf.setFontSize(40);
+            pdf.setTextColor(240, 240, 240);
+            pdf.setGState(new pdf.GState({opacity: 0.1}));
+            pdf.text(
+                'COPIA DE EVALUACIÓN',
+                pageWidth / 2,
+                pdf.internal.pageSize.getHeight() / 2,
+                { align: 'center', angle: 45 }
+            );
+            pdf.setGState(new pdf.GState({opacity: 1}));
         }
         
-        const itemData = checklistData.find(item => item.id == id);
-        const statusText = data.status === 'ok' ? '✅ OK' : data.status === 'warning' ? '⚠️ Atención' : '❌ Problema';
+        // Guardar PDF
+        const fileName = `Informe_${AppState.vehicle.dominio}_${formatDateForFile(new Date())}.pdf`;
+        pdf.save(fileName);
         
-        pdf.setFontSize(10);
-        pdf.text(`${itemData.name}: ${statusText}`, margin, yPos);
-        yPos += 6;
-    });
-    
-    // Pie de página
-    yPos = 270;
-    pdf.setFontSize(8);
-    pdf.setTextColor(100, 100, 100);
-    pdf.text('Desarrollado por AFM Solutions — afmsolutions.com.ar', margin, yPos);
-    pdf.text('Sistema Inteligente por Capas - Versión demo 2.0', pageWidth/2, yPos);
-    
-    // Guardar PDF
-    const fileName = `Informe_${appState.formData.dominio || 'vehiculo'}_${new Date().toISOString().slice(0, 10)}.pdf`;
-    pdf.save(fileName);
+        // Mostrar confirmación
+        alert(`✅ Informe generado correctamente:\n${fileName}`);
+        
+    } catch (error) {
+        console.error('Error al generar PDF:', error);
+        alert('Error al generar el PDF. Por favor, intente nuevamente.');
+    }
 }
 
-// ==================== INICIALIZACIÓN COMPLETA ====================
-console.log('✅ Sistema Inteligente Akina Check cargado correctamente');
-console.log('🧠 Sistema por capas activo:');
-console.log('• Capa 1: Clasificación de ítems');
-console.log('• Capa 2: Estado + Peso');
-console.log('• Capa 3: Reglas profesionales');
-console.log('• Capa 4: Explicación automática');
-console.log('• Capa 5: Control del inspector');
+// Funciones utilitarias
+function formatDate(date) {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+}
+
+function formatDateForFile(date) {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${year}${month}${day}_${hours}${minutes}`;
+}
+
+function formatNumber(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+function getCategoryLabel(category) {
+    const labels = {
+        critical: 'CRÍTICO',
+        important: 'IMPORTANTE',
+        secondary: 'SECUNDARIO',
+        legal: 'LEGAL'
+    };
+    return labels[category] || category;
+}
+
+function getRecommendationText(recommendation) {
+    switch(recommendation) {
+        case 'approved': return 'APROBADO';
+        case 'conditional': return 'CONDICIONAL';
+        case 'not-recommended': return 'NO RECOMENDADO';
+        default: return 'PENDIENTE';
+    }
+}
+
+// Inicialización completa
+console.log(`
+╔══════════════════════════════════════════════════════════╗
+║             AKINA CHECK - SISTEMA PROFESIONAL            ║
+║                  Versión para Inspectores                ║
+╚══════════════════════════════════════════════════════════╝
+Sistema inicializado correctamente.
+• Componentes cargados: ${COMPONENTS_DB.length}
+• Versión: ${SYSTEM_CONFIG.version}
+• Desarrollado por: ${SYSTEM_CONFIG.developer}
+`);
