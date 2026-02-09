@@ -3,21 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Akina Check - Informe de Chequeo Vehicular</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Akina Check - Informe de Inspección Vehicular</title>
     <style>
+        /* ===== VARIABLES Y RESET ===== */
         :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --success-color: #27ae60;
-            --warning-color: #f39c12;
-            --danger-color: #e74c3c;
-            --light-color: #ecf0f1;
-            --dark-color: #2c3e50;
-            --border-color: #bdc3c7;
-            --text-color: #333;
-            --text-light: #7f8c8d;
-            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --color-primary: #1a365d;
+            --color-secondary: #2d3748;
+            --color-success: #276749;
+            --color-warning: #975a16;
+            --color-danger: #9b2c2c;
+            --color-light: #f7fafc;
+            --color-border: #e2e8f0;
+            --color-text: #2d3748;
+            --color-text-light: #718096;
+            --font-main: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            --radius: 6px;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
         
         * {
@@ -28,117 +30,139 @@
         
         body {
             font-family: var(--font-main);
-            color: var(--text-color);
-            background-color: #f8f9fa;
-            line-height: 1.6;
+            color: var(--color-text);
+            line-height: 1.5;
+            background-color: #f8fafc;
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
         
-        /* Header */
-        .header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 20px;
-            text-align: center;
-            border-radius: 8px 8px 0 0;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        /* ===== TIPOGRAFÍA ===== */
+        h1, h2, h3, h4 {
+            font-weight: 600;
+            line-height: 1.3;
         }
         
-        .header h1 {
-            font-size: 2.2rem;
-            margin-bottom: 5px;
-            letter-spacing: 1px;
-        }
+        h1 { font-size: 2rem; }
+        h2 { font-size: 1.5rem; }
+        h3 { font-size: 1.25rem; }
+        h4 { font-size: 1.125rem; }
         
-        .header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
+        .text-sm { font-size: 0.875rem; }
+        .text-xs { font-size: 0.75rem; }
+        .text-center { text-align: center; }
+        .font-medium { font-weight: 500; }
+        .font-semibold { font-weight: 600; }
         
-        /* Contenedores principales */
+        /* ===== LAYOUT ===== */
         .container {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 25px;
-            margin-bottom: 30px;
+            gap: 24px;
+            margin-bottom: 32px;
         }
         
-        @media (max-width: 900px) {
-            .container {
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        
+        @media (max-width: 768px) {
+            .grid-2 {
                 grid-template-columns: 1fr;
             }
         }
         
-        .section {
-            background-color: white;
-            border-radius: 8px;
-            padding: 25px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-            border: 1px solid var(--border-color);
+        /* ===== COMPONENTES ===== */
+        .card {
+            background: white;
+            border-radius: var(--radius);
+            border: 1px solid var(--color-border);
+            padding: 24px;
+            box-shadow: var(--shadow);
         }
         
-        .section-title {
-            font-size: 1.4rem;
-            color: var(--primary-color);
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--light-color);
+        .section-header {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--color-light);
         }
         
-        .section-title i {
-            color: var(--secondary-color);
+        .section-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-light);
+            border-radius: 6px;
+            color: var(--color-primary);
         }
         
-        /* Portada del informe */
-        .cover-section {
-            grid-column: 1 / -1;
-            padding: 30px;
-            background: linear-gradient(to bottom, white 0%, #f8f9fa 100%);
-            border-left: 6px solid var(--primary-color);
-        }
-        
-        .cover-header {
+        /* ===== HEADER ===== */
+        .app-header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 32px;
+            padding: 24px 0;
+            border-bottom: 1px solid var(--color-border);
         }
         
-        .cover-header h2 {
-            font-size: 1.8rem;
-            color: var(--primary-color);
-            margin-bottom: 5px;
+        .brand {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            letter-spacing: -0.5px;
+            margin-bottom: 4px;
         }
         
-        .cover-header p {
-            color: var(--text-light);
-            font-size: 1.1rem;
+        .subtitle {
+            color: var(--color-text-light);
+            font-size: 1.125rem;
+        }
+        
+        /* ===== PORTADA DEL INFORME ===== */
+        .cover-card {
+            border-left: 4px solid var(--color-primary);
+            padding: 32px;
+        }
+        
+        .cover-title {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .cover-title h2 {
+            color: var(--color-primary);
+            margin-bottom: 8px;
+        }
+        
+        .cover-title p {
+            color: var(--color-text-light);
         }
         
         .recommendation-section {
-            margin: 30px 0;
-            padding: 25px;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
+            background: var(--color-light);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin: 32px 0;
+            border: 1px solid var(--color-border);
         }
         
         .recommendation-title {
-            font-size: 1.3rem;
-            color: var(--primary-color);
-            margin-bottom: 15px;
             text-align: center;
+            margin-bottom: 24px;
+            color: var(--color-primary);
         }
         
         .recommendation-options {
             display: flex;
             justify-content: center;
-            gap: 20px;
-            margin-bottom: 25px;
+            gap: 16px;
+            margin-bottom: 24px;
             flex-wrap: wrap;
         }
         
@@ -147,187 +171,164 @@
             flex-direction: column;
             align-items: center;
             cursor: pointer;
-            padding: 15px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
+            padding: 16px;
+            border-radius: var(--radius);
             border: 2px solid transparent;
-            min-width: 180px;
+            transition: all 0.2s ease;
+            min-width: 160px;
+            background: white;
         }
         
         .recommendation-option:hover {
-            background-color: rgba(236, 240, 241, 0.5);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
         
         .recommendation-option.selected {
             border-color: currentColor;
-            background-color: rgba(236, 240, 241, 0.8);
         }
         
         .recommendation-icon {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+            font-size: 2rem;
+            margin-bottom: 8px;
         }
         
-        .option-apto {
-            color: var(--success-color);
+        .option-apto { color: var(--color-success); }
+        .option-observaciones { color: var(--color-warning); }
+        .option-no-recomendado { color: var(--color-danger); }
+        
+        .reason-container {
+            margin-top: 24px;
         }
         
-        .option-observaciones {
-            color: var(--warning-color);
-        }
-        
-        .option-no-recomendado {
-            color: var(--danger-color);
-        }
-        
-        .recommendation-text {
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-        
-        .fundamento-container {
-            margin-top: 20px;
-        }
-        
-        .fundamento-container label {
+        .reason-container label {
             display: block;
             margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--primary-color);
+            color: var(--color-primary);
+            font-weight: 500;
         }
         
-        .fundamento-input {
+        .reason-input {
             width: 100%;
             padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
             font-family: var(--font-main);
             font-size: 1rem;
             resize: vertical;
             min-height: 80px;
+            background: white;
         }
         
-        .fundamento-input:focus {
+        .reason-input:focus {
             outline: none;
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(26, 54, 93, 0.1);
         }
         
         .vehicle-data-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            margin-top: 20px;
+            gap: 16px;
+            margin-top: 24px;
         }
         
-        @media (max-width: 600px) {
+        @media (max-width: 640px) {
             .vehicle-data-grid {
                 grid-template-columns: 1fr;
             }
         }
         
+        /* ===== FORMULARIOS ===== */
         .form-group {
-            margin-bottom: 18px;
+            margin-bottom: 16px;
         }
         
-        .form-group label {
+        .form-label {
             display: block;
             margin-bottom: 6px;
-            font-weight: 600;
-            color: var(--primary-color);
+            color: var(--color-primary);
+            font-weight: 500;
         }
         
         .form-control {
             width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
+            padding: 10px 12px;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
             font-family: var(--font-main);
             font-size: 1rem;
+            background: white;
         }
         
         .form-control:focus {
             outline: none;
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(26, 54, 93, 0.1);
         }
         
-        /* Checklist */
+        /* ===== CHECKLIST ===== */
         .checklist-container {
             max-height: 600px;
             overflow-y: auto;
-            padding-right: 10px;
+            padding-right: 8px;
         }
         
         .checklist-category {
-            margin-bottom: 25px;
+            margin-bottom: 24px;
         }
         
-        .category-title {
-            font-size: 1.2rem;
-            padding: 10px 15px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .category-header {
+            padding: 12px 16px;
+            border-radius: var(--radius);
+            margin-bottom: 16px;
             color: white;
+            font-weight: 500;
         }
         
-        .category-critical {
-            background-color: #c0392b;
-        }
-        
-        .category-safety {
-            background-color: #e67e22;
-        }
-        
-        .category-legal {
-            background-color: #2980b9;
-        }
-        
-        .category-esthetic {
-            background-color: #7f8c8d;
-        }
+        .category-critical { background: var(--color-danger); }
+        .category-safety { background: var(--color-warning); }
+        .category-legal { background: var(--color-primary); }
+        .category-esthetic { background: var(--color-text-light); }
         
         .checklist-item {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
+            padding: 16px;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
             margin-bottom: 12px;
-            background-color: white;
-            transition: all 0.2s ease;
+            background: white;
+            transition: border-color 0.2s ease;
         }
         
         .checklist-item:hover {
-            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            border-color: var(--color-primary);
         }
         
         .item-text {
             flex: 1;
-            font-size: 1rem;
+            padding-right: 16px;
         }
         
         .item-status {
             display: flex;
             gap: 8px;
+            flex-shrink: 0;
         }
         
         .status-btn {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             border: 2px solid transparent;
+            background: var(--color-light);
+            font-size: 1rem;
             transition: all 0.2s ease;
-            font-size: 1.2rem;
-            background-color: #f8f9fa;
         }
         
         .status-btn:hover {
@@ -335,305 +336,308 @@
         }
         
         .status-conforme {
-            color: var(--success-color);
-            border-color: var(--success-color);
+            color: var(--color-success);
+            border-color: var(--color-success);
         }
         
         .status-conforme.selected {
-            background-color: var(--success-color);
+            background: var(--color-success);
             color: white;
         }
         
         .status-observacion {
-            color: var(--warning-color);
-            border-color: var(--warning-color);
+            color: var(--color-warning);
+            border-color: var(--color-warning);
         }
         
         .status-observacion.selected {
-            background-color: var(--warning-color);
+            background: var(--color-warning);
             color: white;
         }
         
         .status-no-conforme {
-            color: var(--danger-color);
-            border-color: var(--danger-color);
+            color: var(--color-danger);
+            border-color: var(--color-danger);
         }
         
         .status-no-conforme.selected {
-            background-color: var(--danger-color);
+            background: var(--color-danger);
             color: white;
         }
         
-        /* Asistencia inteligente */
-        .assistance-container {
-            display: flex;
-            justify-content: space-between;
-            background-color: #f8f9fa;
+        /* ===== ASISTENCIA ===== */
+        .assistance-panel {
+            background: var(--color-light);
             padding: 20px;
-            border-radius: 8px;
-            margin-top: 25px;
-            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            margin-top: 24px;
+            border: 1px solid var(--color-border);
+        }
+        
+        .counters {
+            display: flex;
+            gap: 32px;
+            margin-bottom: 20px;
         }
         
         .counter {
             text-align: center;
-            flex: 1;
         }
         
         .counter-value {
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: 700;
             display: block;
+            line-height: 1;
         }
         
         .counter-label {
-            font-size: 0.9rem;
-            color: var(--text-light);
+            font-size: 0.875rem;
+            color: var(--color-text-light);
+            margin-top: 4px;
         }
         
-        .observations-counter .counter-value {
-            color: var(--warning-color);
-        }
-        
-        .nonconformities-counter .counter-value {
-            color: var(--danger-color);
-        }
+        .observations-counter .counter-value { color: var(--color-warning); }
+        .nonconformities-counter .counter-value { color: var(--color-danger); }
         
         .assistance-message {
-            background-color: #e8f4fc;
-            padding: 15px;
-            border-radius: 6px;
-            margin-top: 20px;
-            border-left: 4px solid var(--secondary-color);
+            padding: 12px 16px;
+            background: white;
+            border-radius: var(--radius);
+            border-left: 4px solid var(--color-primary);
             font-style: italic;
+            color: var(--color-text);
         }
         
-        /* Vista previa del informe */
+        /* ===== VISTA PREVIA ===== */
         .report-preview {
-            grid-column: 1 / -1;
-            background-color: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            margin-top: 20px;
+            padding: 32px;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
         }
         
         .report-header {
             text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid var(--light-color);
-        }
-        
-        .report-header h2 {
-            color: var(--primary-color);
-            font-size: 1.8rem;
-            margin-bottom: 5px;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 2px solid var(--color-light);
         }
         
         .report-cover-info {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 30px;
-            padding: 20px;
-            background-color: #f8f9fa;
-            border-radius: 8px;
+            margin-bottom: 32px;
+            padding: 24px;
+            background: var(--color-light);
+            border-radius: var(--radius);
+            flex-wrap: wrap;
+            gap: 24px;
         }
         
         .recommendation-badge {
             display: inline-block;
             padding: 8px 20px;
-            border-radius: 30px;
+            border-radius: 20px;
             font-weight: 600;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            font-size: 0.875rem;
         }
         
         .badge-apto {
-            background-color: rgba(39, 174, 96, 0.2);
-            color: var(--success-color);
+            background: rgba(39, 103, 73, 0.1);
+            color: var(--color-success);
         }
         
         .badge-observaciones {
-            background-color: rgba(243, 156, 18, 0.2);
-            color: var(--warning-color);
+            background: rgba(151, 90, 22, 0.1);
+            color: var(--color-warning);
         }
         
         .badge-no-recomendado {
-            background-color: rgba(231, 76, 60, 0.2);
-            color: var(--danger-color);
+            background: rgba(155, 44, 44, 0.1);
+            color: var(--color-danger);
         }
         
         .checklist-summary {
-            margin: 30px 0;
+            margin: 32px 0;
         }
         
         .summary-category {
-            margin-bottom: 25px;
+            margin-bottom: 24px;
         }
         
         .summary-item {
             display: flex;
             justify-content: space-between;
             padding: 12px 0;
-            border-bottom: 1px solid var(--light-color);
+            border-bottom: 1px solid var(--color-light);
         }
         
         .summary-status {
-            font-weight: 600;
+            font-weight: 500;
+            font-size: 0.875rem;
         }
         
-        .summary-status-conforme {
-            color: var(--success-color);
-        }
+        .summary-status-conforme { color: var(--color-success); }
+        .summary-status-observacion { color: var(--color-warning); }
+        .summary-status-no-conforme { color: var(--color-danger); }
         
-        .summary-status-observacion {
-            color: var(--warning-color);
-        }
-        
-        .summary-status-no-conforme {
-            color: var(--danger-color);
-        }
-        
-        /* Botones */
+        /* ===== BOTONES ===== */
         .action-buttons {
             display: flex;
             justify-content: center;
-            gap: 20px;
-            margin: 30px 0;
-            grid-column: 1 / -1;
+            gap: 16px;
+            margin: 32px 0;
         }
         
         .btn {
-            padding: 14px 28px;
+            padding: 12px 24px;
             border: none;
-            border-radius: 6px;
+            border-radius: var(--radius);
             font-family: var(--font-main);
-            font-size: 1.1rem;
-            font-weight: 600;
+            font-size: 1rem;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
+            transition: all 0.2s ease;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
         
         .btn-primary {
-            background-color: var(--primary-color);
+            background: var(--color-primary);
             color: white;
         }
         
-        .btn-primary:hover {
-            background-color: #1a252f;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        .btn-primary:hover:not(:disabled) {
+            background: var(--color-secondary);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
         }
         
         .btn-success {
-            background-color: var(--success-color);
+            background: var(--color-success);
             color: white;
         }
         
-        .btn-success:hover {
-            background-color: #219653;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        .btn-success:hover:not(:disabled) {
+            background: #22543d;
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
         }
         
-        /* Bloque comercial */
-        .commercial-block {
+        /* ===== BLOQUE COMERCIAL ===== */
+        .commercial-notice {
             text-align: center;
-            padding: 20px;
-            color: var(--text-light);
-            font-size: 0.9rem;
-            margin-top: 30px;
-            border-top: 1px solid var(--border-color);
-            grid-column: 1 / -1;
+            padding: 16px;
+            color: var(--color-text-light);
+            font-size: 0.875rem;
+            margin-top: 32px;
+            border-top: 1px solid var(--color-border);
         }
         
-        /* Footer */
-        .footer {
+        /* ===== FOOTER ===== */
+        .app-footer {
             text-align: center;
-            padding: 25px;
-            color: var(--text-light);
-            font-size: 0.9rem;
+            padding: 24px 0;
+            color: var(--color-text-light);
+            font-size: 0.875rem;
             margin-top: 40px;
-            border-top: 1px solid var(--border-color);
-            grid-column: 1 / -1;
+            border-top: 1px solid var(--color-border);
         }
         
-        .footer a {
-            color: var(--secondary-color);
+        .developer-credit {
+            color: var(--color-text-light);
             text-decoration: none;
         }
         
-        .footer a:hover {
+        .developer-credit:hover {
             text-decoration: underline;
         }
         
-        /* Estilos para impresión/PDF */
+        /* ===== IMPRESIÓN/PDF ===== */
         @media print {
-            .no-print, .action-buttons, .commercial-block {
+            .no-print, .action-buttons, .commercial-notice {
                 display: none !important;
             }
             
             body {
-                max-width: 100%;
                 padding: 0;
-                background-color: white;
+                background: white;
+                max-width: none;
             }
             
-            .section {
+            .card, .report-preview {
                 box-shadow: none;
                 border: none;
-                padding: 15px;
+                padding: 0;
+                margin: 0 0 20px 0;
             }
             
             .report-preview {
-                box-shadow: none;
-                padding: 20px;
+                padding: 0 !important;
+            }
+            
+            .checklist-container {
+                max-height: none;
+                overflow: visible;
             }
         }
+        
+        /* ===== UTILIDADES ===== */
+        .mb-4 { margin-bottom: 16px; }
+        .mb-6 { margin-bottom: 24px; }
+        .mt-4 { margin-top: 16px; }
+        .mt-6 { margin-top: 24px; }
+        .mb-8 { margin-bottom: 32px; }
+        .mt-8 { margin-top: 32px; }
     </style>
 </head>
 <body>
-    <!-- Header con marca -->
-    <header class="header">
-        <h1>AKINA CHECK</h1>
-        <p>Informe profesional de chequeo vehicular</p>
+    <!-- Header principal -->
+    <header class="app-header">
+        <div class="brand">AKINA CHECK</div>
+        <div class="subtitle">Informe profesional de inspección vehicular</div>
     </header>
 
     <!-- Portada del informe -->
-    <section class="section cover-section">
-        <div class="cover-header">
-            <h2>Informe profesional de chequeo vehicular</h2>
-            <p>Documento de evaluación técnica</p>
+    <section class="card cover-card">
+        <div class="cover-title">
+            <h2>Informe de inspección vehicular</h2>
+            <p>Documento técnico para evaluación pre-compra</p>
         </div>
         
         <div class="recommendation-section">
-            <h3 class="recommendation-title">Recomendación del inspector</h3>
+            <h3 class="recommendation-title">Evaluación del inspector</h3>
             
             <div class="recommendation-options">
                 <div class="recommendation-option option-apto" data-value="apto">
                     <div class="recommendation-icon">🟢</div>
-                    <div class="recommendation-text">Apto para compra</div>
+                    <div class="font-semibold">Apto para compra</div>
                 </div>
                 
                 <div class="recommendation-option option-observaciones" data-value="observaciones">
                     <div class="recommendation-icon">🟡</div>
-                    <div class="recommendation-text">Apto con observaciones</div>
+                    <div class="font-semibold">Apto con observaciones</div>
                 </div>
                 
                 <div class="recommendation-option option-no-recomendado" data-value="no-recomendado">
                     <div class="recommendation-icon">🔴</div>
-                    <div class="recommendation-text">No recomendado</div>
+                    <div class="font-semibold">No recomendado</div>
                 </div>
             </div>
             
-            <div class="fundamento-container">
-                <label for="fundamento">Fundamento de la recomendación (Máx. 2-3 líneas)</label>
-                <textarea id="fundamento" class="fundamento-input" placeholder="Escriba aquí el fundamento de su recomendación..." maxlength="200"></textarea>
-                <div style="text-align: right; font-size: 0.8rem; color: var(--text-light); margin-top: 5px;">
+            <div class="reason-container">
+                <label for="reason">Fundamento técnico (máx. 200 caracteres)</label>
+                <textarea id="reason" class="reason-input" placeholder="Base técnica de la evaluación..." maxlength="200"></textarea>
+                <div class="text-right text-sm text-xs mt-1">
                     <span id="char-count">0</span>/200 caracteres
                 </div>
             </div>
@@ -641,134 +645,138 @@
         
         <div class="vehicle-data-grid">
             <div class="form-group">
-                <label for="vehiculo">Vehículo</label>
-                <input type="text" id="vehiculo" class="form-control" placeholder="Ej: Ford Focus Titanium 2.0">
+                <label for="vehicle" class="form-label">Vehículo</label>
+                <input type="text" id="vehicle" class="form-control" placeholder="Ej: Volkswagen Golf 1.4 TSI">
             </div>
             
             <div class="form-group">
-                <label for="dominio">Dominio</label>
-                <input type="text" id="dominio" class="form-control" placeholder="Ej: AB 123 CD">
+                <label for="plate" class="form-label">Dominio</label>
+                <input type="text" id="plate" class="form-control" placeholder="Ej: AB 123 CD">
             </div>
             
             <div class="form-group">
-                <label for="kilometraje">Kilometraje</label>
-                <input type="text" id="kilometraje" class="form-control" placeholder="Ej: 85,500 km">
+                <label for="mileage" class="form-label">Kilometraje</label>
+                <input type="text" id="mileage" class="form-control" placeholder="Ej: 125.500 km">
             </div>
             
             <div class="form-group">
-                <label for="fecha">Fecha de inspección</label>
-                <input type="date" id="fecha" class="form-control" value="">
+                <label for="date" class="form-label">Fecha de inspección</label>
+                <input type="date" id="date" class="form-control">
             </div>
         </div>
     </section>
 
     <!-- Contenedor principal -->
-    <div class="container">
-        <!-- Datos del vehículo y observaciones generales -->
-        <section class="section">
-            <h2 class="section-title"><i class="fas fa-car"></i> Datos del vehículo</h2>
+    <div class="container grid-2">
+        <!-- Datos y observaciones -->
+        <section class="card">
+            <div class="section-header">
+                <div class="section-icon">📋</div>
+                <h3>Datos del vehículo</h3>
+            </div>
             
             <div class="form-group">
-                <label for="observacion-general">Observación general (opcional)</label>
-                <textarea id="observacion-general" class="form-control" rows="4" placeholder="Observaciones generales sobre el vehículo..."></textarea>
+                <label for="notes" class="form-label">Observaciones generales</label>
+                <textarea id="notes" class="form-control" rows="4" placeholder="Anotaciones relevantes sobre el vehículo..."></textarea>
             </div>
             
-            <!-- Asistencia inteligente -->
-            <div class="assistance-container">
-                <div class="counter observations-counter">
-                    <span class="counter-value" id="observaciones-count">0</span>
-                    <span class="counter-label">Observaciones detectadas</span>
+            <!-- Panel de asistencia -->
+            <div class="assistance-panel">
+                <div class="counters">
+                    <div class="counter observations-counter">
+                        <span class="counter-value" id="observations-count">0</span>
+                        <span class="counter-label">Observaciones</span>
+                    </div>
+                    
+                    <div class="counter nonconformities-counter">
+                        <span class="counter-value" id="nonconformities-count">0</span>
+                        <span class="counter-label">No conformes</span>
+                    </div>
                 </div>
                 
-                <div class="counter nonconformities-counter">
-                    <span class="counter-value" id="no-conformes-count">0</span>
-                    <span class="counter-label">Ítems no conformes</span>
+                <div class="assistance-message" id="assistance-message">
+                    Complete la lista de verificación para obtener información de contexto.
                 </div>
-            </div>
-            
-            <div class="assistance-message no-print" id="assistance-message">
-                <!-- Mensaje de asistencia se actualizará dinámicamente -->
-                Complete el checklist para ver recomendaciones de asistencia.
             </div>
         </section>
 
-        <!-- Checklist profesional -->
-        <section class="section">
-            <h2 class="section-title"><i class="fas fa-clipboard-check"></i> Checklist de inspección</h2>
+        <!-- Checklist -->
+        <section class="card">
+            <div class="section-header">
+                <div class="section-icon">✅</div>
+                <h3>Lista de verificación</h3>
+            </div>
             
             <div class="checklist-container" id="checklist-container">
-                <!-- Los ítems del checklist se generarán dinámicamente con JavaScript -->
+                <!-- Generado dinámicamente -->
             </div>
         </section>
     </div>
 
     <!-- Vista previa del informe -->
-    <section class="report-preview" id="report-preview">
+    <section class="report-preview card" id="report-preview">
         <div class="report-header">
-            <h2>INFORME DE CHEQUEO VEHICULAR</h2>
-            <p>AKINA CHECK - Evaluación técnica profesional</p>
+            <h2>INFORME DE INSPECCIÓN VEHICULAR</h2>
+            <p class="text-sm">AKINA CHECK · Evaluación técnica profesional</p>
         </div>
         
         <div class="report-cover-info">
             <div>
-                <div><strong>Vehículo:</strong> <span id="preview-vehiculo">[No especificado]</span></div>
-                <div><strong>Dominio:</strong> <span id="preview-dominio">[No especificado]</span></div>
-                <div><strong>Kilometraje:</strong> <span id="preview-kilometraje">[No especificado]</span></div>
-                <div><strong>Fecha de inspección:</strong> <span id="preview-fecha">[No especificada]</span></div>
+                <div class="mb-2"><span class="font-medium">Vehículo:</span> <span id="preview-vehicle">[No especificado]</span></div>
+                <div class="mb-2"><span class="font-medium">Dominio:</span> <span id="preview-plate">[No especificado]</span></div>
+                <div class="mb-2"><span class="font-medium">Kilometraje:</span> <span id="preview-mileage">[No especificado]</span></div>
+                <div><span class="font-medium">Fecha de inspección:</span> <span id="preview-date">[No especificada]</span></div>
             </div>
             
             <div>
-                <div><strong>Recomendación:</strong></div>
-                <div class="recommendation-badge" id="preview-recomendacion-badge">No seleccionada</div>
-                <div id="preview-fundamento">[No especificado]</div>
+                <div class="mb-2"><span class="font-medium">Evaluación:</span></div>
+                <div class="recommendation-badge" id="preview-recommendation">No seleccionada</div>
+                <div id="preview-reason" class="text-sm mt-2">[No especificado]</div>
             </div>
         </div>
         
-        <div>
-            <h3 style="color: var(--primary-color); margin-bottom: 15px;">Observación general</h3>
-            <p id="preview-observacion-general">[Sin observaciones generales]</p>
+        <div class="mb-8">
+            <h4 class="mb-4">Observaciones generales</h4>
+            <p id="preview-notes">[Sin observaciones generales]</p>
         </div>
         
         <div class="checklist-summary" id="checklist-summary">
-            <!-- Resumen del checklist se generará dinámicamente -->
+            <!-- Generado dinámicamente -->
         </div>
         
-        <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border-color);">
-            <p><strong>Informe realizado por Akina Check</strong></p>
-            <p style="font-size: 0.9rem; color: var(--text-light);">
+        <div class="mt-8 pt-6 border-t border-gray-200">
+            <p class="font-medium">Informe realizado por Akina Check</p>
+            <p class="text-sm text-gray-600 mt-1">
                 Desarrollado por AFM Solutions · afmsolutions.com.ar
             </p>
         </div>
     </section>
 
-    <!-- Botones de acción -->
+    <!-- Acciones principales -->
     <div class="action-buttons no-print">
         <button class="btn btn-primary" id="update-preview-btn">
-            <i class="fas fa-sync-alt"></i> Actualizar vista previa
+            Actualizar vista previa
         </button>
         <button class="btn btn-success" id="download-pdf-btn">
-            <i class="fas fa-file-pdf"></i> Descargar informe (PDF)
+            Descargar informe PDF
         </button>
     </div>
 
     <!-- Bloque comercial -->
-    <div class="commercial-block no-print">
+    <div class="commercial-notice no-print">
         <p>Versión de muestra. Funciones avanzadas disponibles bajo contratación.</p>
     </div>
 
     <!-- Footer -->
-    <footer class="footer">
-        <p>AKINA CHECK - Sistema de informes de chequeo vehicular</p>
-        <p>Desarrollado por AFM Solutions · <a href="https://afmsolutions.com.ar" target="_blank">afmsolutions.com.ar</a></p>
+    <footer class="app-footer">
+        <p>AKINA CHECK · Sistema de informes de inspección vehicular</p>
+        <p class="mt-2">Desarrollado por <a href="https://afmsolutions.com.ar" class="developer-credit">AFM Solutions · afmsolutions.com.ar</a></p>
     </footer>
 
-    <!-- Incluir jsPDF para exportación a PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    
+    <!-- Script principal -->
     <script>
-        // Datos del checklist
-        const checklistItems = [
+        // ===== CONFIGURACIÓN =====
+        const CHECKLIST_ITEMS = [
             { id: 1, category: 'critical', text: 'Motor: funcionamiento, ruidos anormales, fugas de aceite o refrigerante' },
             { id: 2, category: 'critical', text: 'Transmisión: cambios, ruidos, fugas de aceite' },
             { id: 3, category: 'critical', text: 'Sistema de frenos: funcionamiento, desgaste de pastillas, nivel de líquido' },
@@ -786,366 +794,372 @@
             { id: 15, category: 'safety', text: 'Seguridad activa: ABS, ESP, airbags (verificar testigos)' }
         ];
 
-        // Categorías del checklist
-        const categories = {
-            critical: { name: 'Crítico', class: 'category-critical' },
-            safety: { name: 'Seguridad', class: 'category-safety' },
-            legal: { name: 'Legal', class: 'category-legal' },
-            esthetic: { name: 'Estético', class: 'category-esthetic' }
+        const CATEGORIES = {
+            critical: { name: 'Crítico', color: 'category-critical' },
+            safety: { name: 'Seguridad', color: 'category-safety' },
+            legal: { name: 'Legal', color: 'category-legal' },
+            esthetic: { name: 'Estético', color: 'category-esthetic' }
         };
 
-        // Estado inicial
-        let selectedRecommendation = null;
-        let checklistStatus = {};
-        
-        // Inicializar la aplicación
+        const STATUS_TEXTS = {
+            'conforme': 'Conforme',
+            'observacion': 'Observación',
+            'no-conforme': 'No conforme',
+            'no-evaluado': 'No evaluado'
+        };
+
+        // ===== ESTADO DE LA APLICACIÓN =====
+        let appState = {
+            recommendation: null,
+            checklistStatus: {},
+            lastUpdate: null
+        };
+
+        // ===== INICIALIZACIÓN =====
         document.addEventListener('DOMContentLoaded', function() {
-            // Establecer fecha actual por defecto
+            // Configurar fecha actual
             const today = new Date().toISOString().split('T')[0];
-            document.getElementById('fecha').value = today;
+            document.getElementById('date').value = today;
             
-            // Inicializar checklist
-            initializeChecklist();
-            
-            // Inicializar vista previa
+            // Inicializar componentes
+            initChecklist();
+            initEventListeners();
             updatePreview();
             
-            // Configurar eventos
-            setupEventListeners();
-            
-            // Actualizar contador de caracteres
-            document.getElementById('fundamento').addEventListener('input', function() {
-                document.getElementById('char-count').textContent = this.value.length;
-            });
+            // Configurar contador de caracteres
+            document.getElementById('reason').addEventListener('input', updateCharCount);
         });
-        
-        // Inicializar checklist
-        function initializeChecklist() {
+
+        // ===== CHECKLIST =====
+        function initChecklist() {
             const container = document.getElementById('checklist-container');
-            container.innerHTML = '';
             
             // Agrupar ítems por categoría
-            const itemsByCategory = {};
-            checklistItems.forEach(item => {
-                if (!itemsByCategory[item.category]) {
-                    itemsByCategory[item.category] = [];
-                }
-                itemsByCategory[item.category].push(item);
-            });
+            const itemsByCategory = groupItemsByCategory();
             
-            // Crear secciones por categoría
-            Object.keys(categories).forEach(categoryKey => {
-                const category = categories[categoryKey];
-                const categoryItems = itemsByCategory[categoryKey] || [];
+            // Crear interfaz
+            container.innerHTML = '';
+            
+            Object.keys(CATEGORIES).forEach(categoryId => {
+                const category = CATEGORIES[categoryId];
+                const items = itemsByCategory[categoryId] || [];
                 
-                if (categoryItems.length > 0) {
-                    const categorySection = document.createElement('div');
-                    categorySection.className = 'checklist-category';
+                if (items.length === 0) return;
+                
+                // Crear sección de categoría
+                const categorySection = document.createElement('div');
+                categorySection.className = 'checklist-category';
+                
+                // Encabezado de categoría
+                const header = document.createElement('div');
+                header.className = `category-header ${category.color}`;
+                header.innerHTML = `
+                    <span>${category.name}</span>
+                    <span class="text-sm">(${items.length})</span>
+                `;
+                categorySection.appendChild(header);
+                
+                // Agregar ítems
+                items.forEach(item => {
+                    const itemElement = createChecklistItem(item);
+                    categorySection.appendChild(itemElement);
                     
-                    const categoryTitle = document.createElement('div');
-                    categoryTitle.className = `category-title ${category.class}`;
-                    categoryTitle.innerHTML = `
-                        <span>${category.name}</span>
-                        <span>${categoryItems.length} ítems</span>
-                    `;
-                    
-                    categorySection.appendChild(categoryTitle);
-                    
-                    // Agregar ítems de esta categoría
-                    categoryItems.forEach(item => {
-                        const itemElement = document.createElement('div');
-                        itemElement.className = 'checklist-item';
-                        itemElement.dataset.id = item.id;
-                        
-                        itemElement.innerHTML = `
-                            <div class="item-text">${item.text}</div>
-                            <div class="item-status">
-                                <div class="status-btn status-conforme" data-status="conforme" title="Conforme">
-                                    <i class="fas fa-check"></i>
-                                </div>
-                                <div class="status-btn status-observacion" data-status="observacion" title="Observación">
-                                    <i class="fas fa-exclamation-triangle"></i>
-                                </div>
-                                <div class="status-btn status-no-conforme" data-status="no-conforme" title="No conforme">
-                                    <i class="fas fa-times"></i>
-                                </div>
-                            </div>
-                        `;
-                        
-                        categorySection.appendChild(itemElement);
-                        
-                        // Inicializar estado
-                        if (!checklistStatus[item.id]) {
-                            checklistStatus[item.id] = null;
-                        }
-                        
-                        // Configurar eventos para botones de estado
-                        const statusButtons = itemElement.querySelectorAll('.status-btn');
-                        statusButtons.forEach(button => {
-                            button.addEventListener('click', function() {
-                                const status = this.dataset.status;
-                                const itemId = parseInt(itemElement.dataset.id);
-                                setChecklistStatus(itemId, status, itemElement);
-                            });
-                        });
-                    });
-                    
-                    container.appendChild(categorySection);
-                }
+                    // Estado inicial
+                    if (!appState.checklistStatus[item.id]) {
+                        appState.checklistStatus[item.id] = null;
+                    }
+                });
+                
+                container.appendChild(categorySection);
             });
             
             updateCounters();
         }
-        
-        // Establecer estado de un ítem del checklist
-        function setChecklistStatus(itemId, status, itemElement) {
-            checklistStatus[itemId] = status;
+
+        function groupItemsByCategory() {
+            const groups = {};
+            CHECKLIST_ITEMS.forEach(item => {
+                if (!groups[item.category]) {
+                    groups[item.category] = [];
+                }
+                groups[item.category].push(item);
+            });
+            return groups;
+        }
+
+        function createChecklistItem(item) {
+            const element = document.createElement('div');
+            element.className = 'checklist-item';
+            element.dataset.itemId = item.id;
+            
+            element.innerHTML = `
+                <div class="item-text">${item.text}</div>
+                <div class="item-status">
+                    <button type="button" class="status-btn status-conforme" data-status="conforme" title="Conforme">
+                        ✓
+                    </button>
+                    <button type="button" class="status-btn status-observacion" data-status="observacion" title="Observación">
+                        !
+                    </button>
+                    <button type="button" class="status-btn status-no-conforme" data-status="no-conforme" title="No conforme">
+                        ✗
+                    </button>
+                </div>
+            `;
+            
+            return element;
+        }
+
+        function setChecklistStatus(itemId, status) {
+            appState.checklistStatus[itemId] = status;
             
             // Actualizar interfaz
-            const statusButtons = itemElement.querySelectorAll('.status-btn');
-            statusButtons.forEach(button => {
-                if (button.dataset.status === status) {
-                    button.classList.add('selected');
-                } else {
-                    button.classList.remove('selected');
+            const itemElement = document.querySelector(`[data-item-id="${itemId}"]`);
+            if (itemElement) {
+                // Remover selección anterior
+                itemElement.querySelectorAll('.status-btn').forEach(btn => {
+                    btn.classList.remove('selected');
+                });
+                
+                // Marcar selección actual
+                const selectedBtn = itemElement.querySelector(`[data-status="${status}"]`);
+                if (selectedBtn) {
+                    selectedBtn.classList.add('selected');
                 }
-            });
+            }
             
             updateCounters();
             updateAssistanceMessage();
         }
-        
-        // Actualizar contadores de observaciones y no conformes
+
+        // ===== CONTADORES Y ASISTENCIA =====
         function updateCounters() {
-            let observaciones = 0;
-            let noConformes = 0;
+            let observations = 0;
+            let nonconformities = 0;
             
-            Object.values(checklistStatus).forEach(status => {
-                if (status === 'observacion') observaciones++;
-                if (status === 'no-conforme') noConformes++;
+            Object.values(appState.checklistStatus).forEach(status => {
+                if (status === 'observacion') observations++;
+                if (status === 'no-conforme') nonconformities++;
             });
             
-            document.getElementById('observaciones-count').textContent = observaciones;
-            document.getElementById('no-conformes-count').textContent = noConformes;
+            document.getElementById('observations-count').textContent = observations;
+            document.getElementById('nonconformities-count').textContent = nonconformities;
         }
-        
-        // Actualizar mensaje de asistencia
+
         function updateAssistanceMessage() {
-            const messageElement = document.getElementById('assistance-message');
-            const observaciones = parseInt(document.getElementById('observaciones-count').textContent);
-            const noConformes = parseInt(document.getElementById('no-conformes-count').textContent);
+            const element = document.getElementById('assistance-message');
+            const observations = parseInt(document.getElementById('observations-count').textContent);
+            const nonconformities = parseInt(document.getElementById('nonconformities-count').textContent);
             
-            let message = '';
+            let message = 'Complete la lista de verificación para obtener información de contexto.';
             
-            if (observaciones === 0 && noConformes === 0) {
-                message = 'Complete el checklist para ver recomendaciones de asistencia.';
-            } else if (noConformes > 0) {
-                message = 'Se detectaron ítems no conformes que requieren atención prioritaria antes de considerar la compra.';
-            } else if (observaciones > 3) {
-                message = 'Se detectan múltiples observaciones que pueden implicar gastos adicionales a considerar.';
-            } else if (observaciones > 0) {
-                message = 'Se detectaron observaciones que deben ser consideradas en la evaluación del vehículo.';
+            if (nonconformities > 0) {
+                message = 'Se detectaron ítems no conformes que requieren atención prioritaria.';
+            } else if (observations > 3) {
+                message = 'Múltiples observaciones detectadas. Evalúe posibles implicaciones en el costo total.';
+            } else if (observations > 0) {
+                message = 'Observaciones detectadas. Considere en su evaluación final.';
             }
             
-            messageElement.textContent = message;
+            element.textContent = message;
         }
-        
-        // Configurar eventos
-        function setupEventListeners() {
-            // Recomendación
-            const recommendationOptions = document.querySelectorAll('.recommendation-option');
-            recommendationOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    // Remover selección anterior
-                    recommendationOptions.forEach(opt => opt.classList.remove('selected'));
-                    
-                    // Establecer nueva selección
-                    this.classList.add('selected');
-                    selectedRecommendation = this.dataset.value;
-                    
-                    // Actualizar vista previa
-                    updatePreviewRecommendation();
-                });
-            });
-            
-            // Actualizar vista previa cuando cambian los datos
-            const formInputs = ['vehiculo', 'dominio', 'kilometraje', 'fecha', 'fundamento', 'observacion-general'];
-            formInputs.forEach(inputId => {
-                document.getElementById(inputId).addEventListener('input', updatePreview);
-            });
-            
-            // Botón para actualizar vista previa
-            document.getElementById('update-preview-btn').addEventListener('click', updatePreview);
-            
-            // Botón para descargar PDF
-            document.getElementById('download-pdf-btn').addEventListener('click', downloadPDF);
-        }
-        
-        // Actualizar vista previa completa
+
+        // ===== VISTA PREVIA =====
         function updatePreview() {
             updatePreviewVehicleData();
             updatePreviewRecommendation();
             updatePreviewChecklist();
+            appState.lastUpdate = new Date().toISOString();
         }
-        
-        // Actualizar datos del vehículo en vista previa
+
         function updatePreviewVehicleData() {
-            document.getElementById('preview-vehiculo').textContent = 
-                document.getElementById('vehiculo').value || '[No especificado]';
+            document.getElementById('preview-vehicle').textContent = 
+                getInputValue('vehicle', '[No especificado]');
             
-            document.getElementById('preview-dominio').textContent = 
-                document.getElementById('dominio').value || '[No especificado]';
+            document.getElementById('preview-plate').textContent = 
+                getInputValue('plate', '[No especificado]');
             
-            document.getElementById('preview-kilometraje').textContent = 
-                document.getElementById('kilometraje').value || '[No especificado]';
+            document.getElementById('preview-mileage').textContent = 
+                getInputValue('mileage', '[No especificado]');
             
-            const fechaInput = document.getElementById('fecha').value;
-            document.getElementById('preview-fecha').textContent = 
-                fechaInput ? formatDate(fechaInput) : '[No especificada]';
+            const dateValue = getInputValue('date');
+            document.getElementById('preview-date').textContent = 
+                dateValue ? formatDate(dateValue) : '[No especificada]';
             
-            const observacion = document.getElementById('observacion-general').value;
-            document.getElementById('preview-observacion-general').textContent = 
-                observacion || '[Sin observaciones generales]';
+            document.getElementById('preview-notes').textContent = 
+                getInputValue('notes', '[Sin observaciones generales]');
         }
-        
-        // Actualizar recomendación en vista previa
+
         function updatePreviewRecommendation() {
-            const fundamento = document.getElementById('fundamento').value;
-            document.getElementById('preview-fundamento').textContent = 
-                fundamento || '[No especificado]';
+            const reason = getInputValue('reason');
+            document.getElementById('preview-reason').textContent = 
+                reason || '[No especificado]';
             
-            const badgeElement = document.getElementById('preview-recomendacion-badge');
+            const badge = document.getElementById('preview-recommendation');
             
-            if (selectedRecommendation === 'apto') {
-                badgeElement.className = 'recommendation-badge badge-apto';
-                badgeElement.textContent = 'Apto para compra';
-            } else if (selectedRecommendation === 'observaciones') {
-                badgeElement.className = 'recommendation-badge badge-observaciones';
-                badgeElement.textContent = 'Apto con observaciones';
-            } else if (selectedRecommendation === 'no-recomendado') {
-                badgeElement.className = 'recommendation-badge badge-no-recomendado';
-                badgeElement.textContent = 'No recomendado';
-            } else {
-                badgeElement.className = 'recommendation-badge';
-                badgeElement.textContent = 'No seleccionada';
+            switch(appState.recommendation) {
+                case 'apto':
+                    badge.className = 'recommendation-badge badge-apto';
+                    badge.textContent = 'Apto para compra';
+                    break;
+                case 'observaciones':
+                    badge.className = 'recommendation-badge badge-observaciones';
+                    badge.textContent = 'Apto con observaciones';
+                    break;
+                case 'no-recomendado':
+                    badge.className = 'recommendation-badge badge-no-recomendado';
+                    badge.textContent = 'No recomendado';
+                    break;
+                default:
+                    badge.className = 'recommendation-badge';
+                    badge.textContent = 'No seleccionada';
             }
         }
-        
-        // Actualizar checklist en vista previa
+
         function updatePreviewChecklist() {
-            const summaryElement = document.getElementById('checklist-summary');
-            summaryElement.innerHTML = '<h3 style="color: var(--primary-color); margin-bottom: 20px;">Resumen del checklist de inspección</h3>';
+            const container = document.getElementById('checklist-summary');
+            container.innerHTML = '<h3 class="mb-6">Resumen de verificación técnica</h3>';
             
             // Agrupar por categoría
-            Object.keys(categories).forEach(categoryKey => {
-                const category = categories[categoryKey];
-                const categoryItems = checklistItems.filter(item => item.category === categoryKey);
+            Object.keys(CATEGORIES).forEach(categoryId => {
+                const category = CATEGORIES[categoryId];
+                const items = CHECKLIST_ITEMS.filter(item => item.category === categoryId);
                 
-                if (categoryItems.length > 0) {
-                    const categorySection = document.createElement('div');
-                    categorySection.className = 'summary-category';
+                if (items.length === 0) return;
+                
+                const section = document.createElement('div');
+                section.className = 'summary-category';
+                
+                const title = document.createElement('h4');
+                title.className = 'font-semibold mb-4';
+                title.textContent = category.name;
+                section.appendChild(title);
+                
+                items.forEach(item => {
+                    const status = appState.checklistStatus[item.id] || 'no-evaluado';
+                    const statusText = STATUS_TEXTS[status] || 'No evaluado';
+                    const statusClass = `summary-status summary-status-${status}`;
                     
-                    const categoryTitle = document.createElement('h4');
-                    categoryTitle.style.color = 'white';
-                    categoryTitle.style.padding = '8px 15px';
-                    categoryTitle.style.borderRadius = '4px';
-                    categoryTitle.style.backgroundColor = getCategoryColor(categoryKey);
-                    categoryTitle.textContent = category.name;
-                    categorySection.appendChild(categoryTitle);
-                    
-                    categoryItems.forEach(item => {
-                        const status = checklistStatus[item.id] || 'no-evaluado';
-                        const statusText = getStatusText(status);
-                        const statusClass = getStatusClass(status);
-                        
-                        const itemElement = document.createElement('div');
-                        itemElement.className = 'summary-item';
-                        
-                        itemElement.innerHTML = `
-                            <span>${item.text}</span>
-                            <span class="summary-status ${statusClass}">${statusText}</span>
-                        `;
-                        
-                        categorySection.appendChild(itemElement);
-                    });
-                    
-                    summaryElement.appendChild(categorySection);
-                }
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'summary-item';
+                    itemElement.innerHTML = `
+                        <span>${item.text}</span>
+                        <span class="${statusClass}">${statusText}</span>
+                    `;
+                    section.appendChild(itemElement);
+                });
+                
+                container.appendChild(section);
             });
         }
-        
-        // Descargar PDF
-        function downloadPDF() {
-            // Verificar que se haya seleccionado una recomendación
-            if (!selectedRecommendation) {
-                alert('Por favor, seleccione una recomendación antes de generar el PDF.');
+
+        // ===== EVENTOS =====
+        function initEventListeners() {
+            // Recomendación
+            document.querySelectorAll('.recommendation-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.recommendation-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                    appState.recommendation = this.dataset.value;
+                    updatePreviewRecommendation();
+                });
+            });
+            
+            // Checklist (delegación de eventos)
+            document.getElementById('checklist-container').addEventListener('click', function(e) {
+                const statusBtn = e.target.closest('.status-btn');
+                if (!statusBtn) return;
+                
+                const itemElement = statusBtn.closest('.checklist-item');
+                const itemId = parseInt(itemElement.dataset.itemId);
+                const status = statusBtn.dataset.status;
+                
+                setChecklistStatus(itemId, status);
+            });
+            
+            // Datos del formulario
+            ['vehicle', 'plate', 'mileage', 'date', 'reason', 'notes'].forEach(id => {
+                document.getElementById(id).addEventListener('input', updatePreview);
+            });
+            
+            // Botones de acción
+            document.getElementById('update-preview-btn').addEventListener('click', updatePreview);
+            document.getElementById('download-pdf-btn').addEventListener('click', downloadPDF);
+        }
+
+        function updateCharCount() {
+            const element = document.getElementById('reason');
+            document.getElementById('char-count').textContent = element.value.length;
+        }
+
+        // ===== PDF =====
+        async function downloadPDF() {
+            // Validación básica
+            if (!appState.recommendation) {
+                alert('Seleccione una evaluación antes de generar el PDF.');
                 return;
             }
             
-            // Verificar que se haya ingresado el fundamento
-            const fundamento = document.getElementById('fundamento').value.trim();
-            if (!fundamento) {
-                alert('Por favor, ingrese el fundamento de la recomendación antes de generar el PDF.');
+            if (!document.getElementById('reason').value.trim()) {
+                alert('Ingrese el fundamento técnico antes de generar el PDF.');
                 return;
             }
             
-            // Crear un clon del reporte para el PDF
-            const element = document.getElementById('report-preview');
+            // Estado del botón
+            const button = document.getElementById('download-pdf-btn');
+            const originalText = button.innerHTML;
+            button.innerHTML = 'Generando PDF...';
+            button.disabled = true;
             
-            // Mostrar mensaje de generación
-            const originalButtonText = document.getElementById('download-pdf-btn').innerHTML;
-            document.getElementById('download-pdf-btn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generando PDF...';
-            document.getElementById('download-pdf-btn').disabled = true;
-            
-            // Generar PDF
-            html2canvas(element, {
-                scale: 2,
-                useCORS: true,
-                logging: false
-            }).then(canvas => {
+            try {
+                // Cargar librerías dinámicamente
+                await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+                await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
+                
+                // Generar PDF
+                const element = document.getElementById('report-preview');
+                const canvas = await html2canvas(element, {
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                    backgroundColor: '#ffffff'
+                });
+                
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
                 const imgData = canvas.toDataURL('image/png');
-                const pdf = new window.jspdf.jsPDF('p', 'mm', 'a4');
                 const imgWidth = 190;
-                const pageHeight = 280;
                 const imgHeight = canvas.height * imgWidth / canvas.width;
-                let heightLeft = imgHeight;
-                let position = 10;
                 
-                pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
+                pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
                 
-                // Si el contenido es muy largo, agregar páginas adicionales
-                while (heightLeft >= 0) {
-                    position = heightLeft - imgHeight;
-                    pdf.addPage();
-                    pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-                    heightLeft -= pageHeight;
-                }
-                
-                // Agregar marca de agua discreta
+                // Pie de página
                 pdf.setFontSize(8);
-                pdf.setTextColor(150, 150, 150);
-                pdf.text('Desarrollado por AFM Solutions · afmsolutions.com.ar', 105, 285, { align: 'center' });
+                pdf.setTextColor(128, 128, 128);
+                pdf.text('Desarrollado por AFM Solutions · afmsolutions.com.ar', 105, 290, { align: 'center' });
                 
-                // Descargar PDF
-                const fecha = document.getElementById('fecha').value || new Date().toISOString().split('T')[0];
-                const dominio = document.getElementById('dominio').value || 'informe';
-                pdf.save(`Informe_AkinaCheck_${dominio}_${fecha}.pdf`);
+                // Descargar
+                const plate = getInputValue('plate') || 'informe';
+                const date = getInputValue('date') || new Date().toISOString().split('T')[0];
+                pdf.save(`Informe_AkinaCheck_${plate}_${date}.pdf`);
                 
-                // Restaurar botón
-                document.getElementById('download-pdf-btn').innerHTML = originalButtonText;
-                document.getElementById('download-pdf-btn').disabled = false;
-            }).catch(error => {
+            } catch (error) {
                 console.error('Error al generar PDF:', error);
                 alert('Error al generar el PDF. Por favor, intente nuevamente.');
-                
-                // Restaurar botón
-                document.getElementById('download-pdf-btn').innerHTML = originalButtonText;
-                document.getElementById('download-pdf-btn').disabled = false;
-            });
+            } finally {
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }
         }
-        
-        // Funciones auxiliares
+
+        // ===== UTILIDADES =====
+        function getInputValue(id, defaultValue = '') {
+            const element = document.getElementById(id);
+            return element ? element.value.trim() : defaultValue;
+        }
+
         function formatDate(dateString) {
             const date = new Date(dateString);
             return date.toLocaleDateString('es-AR', {
@@ -1154,33 +1168,20 @@
                 year: 'numeric'
             });
         }
-        
-        function getCategoryColor(categoryKey) {
-            switch(categoryKey) {
-                case 'critical': return '#c0392b';
-                case 'safety': return '#e67e22';
-                case 'legal': return '#2980b9';
-                case 'esthetic': return '#7f8c8d';
-                default: return '#95a5a6';
-            }
-        }
-        
-        function getStatusText(status) {
-            switch(status) {
-                case 'conforme': return 'Conforme';
-                case 'observacion': return 'Observación';
-                case 'no-conforme': return 'No conforme';
-                default: return 'No evaluado';
-            }
-        }
-        
-        function getStatusClass(status) {
-            switch(status) {
-                case 'conforme': return 'summary-status-conforme';
-                case 'observacion': return 'summary-status-observacion';
-                case 'no-conforme': return 'summary-status-no-conforme';
-                default: return '';
-            }
+
+        function loadScript(src) {
+            return new Promise((resolve, reject) => {
+                if (document.querySelector(`script[src="${src}"]`)) {
+                    resolve();
+                    return;
+                }
+                
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
         }
     </script>
 </body>
