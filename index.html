@@ -3,234 +3,327 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Akina Check - Inspección Vehicular</title>
+    <title>Akina Check | Inspección Vehicular</title>
     <style>
-        /* RESET Y BASE */
+        /* ===== RESET Y BASE ===== */
+        :root {
+            --color-akina: #1e3a8a;
+            --color-akina-light: #3b82f6;
+            --color-success: #059669;
+            --color-warning: #d97706;
+            --color-danger: #dc2626;
+            --color-text: #1f2937;
+            --color-text-light: #6b7280;
+            --color-border: #e5e7eb;
+            --color-bg: #f9fafb;
+            --color-card: #ffffff;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --radius-sm: 0.25rem;
+            --radius: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            color: #333;
-            background: #f5f5f5;
+            font-family: var(--font-sans);
+            color: var(--color-text);
+            background: var(--color-bg);
             line-height: 1.5;
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* HEADER PRINCIPAL */
-        .site-header {
-            text-align: center;
-            padding: 2rem 0 3rem;
-            border-bottom: 2px solid #e0e0e0;
-            margin-bottom: 2rem;
-        }
-
-        .site-header h1 {
-            font-size: 2.5rem;
-            color: #1a1a1a;
-            letter-spacing: 1px;
-            margin-bottom: 0.5rem;
-        }
-
-        .site-header p {
-            color: #666;
-            font-size: 1.1rem;
-        }
-
-        /* PORTADA */
-        .cover {
-            background: white;
-            padding: 2.5rem;
-            margin-bottom: 2rem;
-            border: 1px solid #ddd;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
             position: relative;
         }
 
-        .cover::before {
-            content: '';
-            position: absolute;
+        /* ===== TIPOGRAFÍA SISTEMA ===== */
+        h1, h2, h3, h4, h5 {
+            font-weight: 600;
+            line-height: 1.25;
+        }
+
+        .text-4xl { font-size: 2.25rem; }
+        .text-3xl { font-size: 1.875rem; }
+        .text-2xl { font-size: 1.5rem; }
+        .text-xl { font-size: 1.25rem; }
+        .text-lg { font-size: 1.125rem; }
+        .text-base { font-size: 1rem; }
+        .text-sm { font-size: 0.875rem; }
+        .text-xs { font-size: 0.75rem; }
+
+        .font-medium { font-weight: 500; }
+        .font-semibold { font-weight: 600; }
+        .font-bold { font-weight: 700; }
+
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .text-akina { color: var(--color-akina); }
+        .text-muted { color: var(--color-text-light); }
+
+        /* ===== LAYOUT SISTEMA ===== */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+        .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+        .flex { display: flex; }
+        .items-center { align-items: center; }
+        .items-start { align-items: flex-start; }
+        .items-end { align-items: flex-end; }
+        .justify-between { justify-content: space-between; }
+        .justify-center { justify-content: center; }
+        .gap-1 { gap: 0.25rem; }
+        .gap-2 { gap: 0.5rem; }
+        .gap-3 { gap: 0.75rem; }
+        .gap-4 { gap: 1rem; }
+        .gap-6 { gap: 1.5rem; }
+        .gap-8 { gap: 2rem; }
+
+        .space-y-2 > * + * { margin-top: 0.5rem; }
+        .space-y-3 > * + * { margin-top: 0.75rem; }
+        .space-y-4 > * + * { margin-top: 1rem; }
+        .space-y-6 > * + * { margin-top: 1.5rem; }
+
+        /* ===== COMPONENTES ===== */
+        .card {
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .card-lg {
+            padding: 2rem;
+        }
+
+        .card-header {
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--color-border);
+            width: 100%;
+            margin: 1.5rem 0;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            line-height: 1;
+        }
+
+        .badge-critical { background: #fee2e2; color: var(--color-danger); }
+        .badge-safety { background: #fef3c7; color: var(--color-warning); }
+        .badge-legal { background: #dbeafe; color: var(--color-akina); }
+        .badge-esthetic { background: #f3f4f6; color: var(--color-text-light); }
+
+        /* ===== HEADER ===== */
+        .app-header {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--color-border);
+            background: var(--color-card);
+            position: sticky;
             top: 0;
-            left: 0;
-            width: 6px;
-            height: 100%;
-            background: #2c3e50;
+            z-index: 50;
+            backdrop-filter: blur(8px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .brand-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: var(--color-akina);
+            color: white;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        /* ===== PORTADA ===== */
+        .cover {
+            border-left: 4px solid var(--color-akina);
         }
 
         .cover-title {
             text-align: center;
-            margin-bottom: 2.5rem;
+            padding: 2rem 0;
         }
 
-        .cover-title h2 {
-            font-size: 1.8rem;
-            color: #2c3e50;
-            margin-bottom: 0.5rem;
+        /* ===== RECOMENDACIÓN ===== */
+        .recommendation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
         }
 
-        .cover-title p {
-            color: #666;
-        }
-
-        /* RECOMENDACIÓN */
-        .recommendation-section {
-            background: #f8f9fa;
-            padding: 2rem;
-            margin: 2.5rem 0;
-            border: 1px solid #dee2e6;
-        }
-
-        .recommendation-title {
-            text-align: center;
-            font-size: 1.3rem;
-            color: #2c3e50;
-            margin-bottom: 1.5rem;
-        }
-
-        .recommendation-options {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .option {
-            text-align: center;
-            padding: 1rem 1.5rem;
+        .recommendation-card {
             border: 2px solid transparent;
-            border-radius: 6px;
             cursor: pointer;
-            background: white;
-            transition: all 0.2s;
-            min-width: 180px;
+            transition: all 0.2s ease;
+            text-align: center;
+            padding: 1.5rem 1rem;
+            border-radius: var(--radius-md);
         }
 
-        .option:hover {
+        .recommendation-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            box-shadow: var(--shadow-md);
         }
 
-        .option.selected {
+        .recommendation-card.selected {
             border-color: currentColor;
+            background: rgba(0, 0, 0, 0.02);
         }
 
-        .option-icon {
+        .recommendation-icon {
             font-size: 2rem;
             margin-bottom: 0.5rem;
         }
 
-        .option-text {
-            font-weight: 600;
-            font-size: 1rem;
-        }
+        .recommendation-apto { color: var(--color-success); }
+        .recommendation-observaciones { color: var(--color-warning); }
+        .recommendation-no-recomendado { color: var(--color-danger); }
 
-        .option-apto { color: #27ae60; }
-        .option-observaciones { color: #f39c12; }
-        .option-no-recomendado { color: #e74c3c; }
-
-        /* FORMULARIOS */
+        /* ===== FORMULARIOS ===== */
         .form-group {
-            margin-bottom: 1.2rem;
+            margin-bottom: 1rem;
         }
 
         .form-label {
             display: block;
+            font-size: 0.875rem;
             font-weight: 500;
-            color: #2c3e50;
-            margin-bottom: 0.5rem;
+            color: var(--color-text);
+            margin-bottom: 0.375rem;
         }
 
-        .form-input, .form-textarea {
+        .form-control {
             width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 1rem;
-            font-family: inherit;
+            padding: 0.625rem 0.75rem;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            line-height: 1.25;
+            transition: all 0.15s ease;
+            background: var(--color-card);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--color-akina-light);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
 
         .form-textarea {
-            min-height: 80px;
+            min-height: 5rem;
             resize: vertical;
+            font-family: var(--font-sans);
         }
 
-        .form-input:focus, .form-textarea:focus {
-            outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
-        }
-
-        /* DATOS DEL VEHÍCULO */
-        .vehicle-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        /* CHECKLIST */
-        .checklist-container {
-            max-height: 500px;
+        /* ===== CHECKLIST ===== */
+        .checklist-section {
+            max-height: 600px;
             overflow-y: auto;
-            padding-right: 10px;
+            padding-right: 0.5rem;
         }
 
-        .checklist-category {
-            margin-bottom: 2rem;
+        .checklist-section::-webkit-scrollbar {
+            width: 6px;
         }
 
-        .category-header {
-            background: #2c3e50;
-            color: white;
-            padding: 0.75rem 1rem;
-            border-radius: 4px;
-            margin-bottom: 1rem;
-            font-weight: 500;
-            display: flex;
-            justify-content: space-between;
+        .checklist-section::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .checklist-section::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+
+        .checklist-section::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
         }
 
         .checklist-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem;
-            border: 1px solid #eee;
+            padding: 0.875rem;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
             margin-bottom: 0.5rem;
-            background: white;
-            border-radius: 4px;
+            background: var(--color-card);
+            transition: all 0.15s ease;
         }
 
         .checklist-item:hover {
-            border-color: #3498db;
+            border-color: var(--color-akina-light);
+            box-shadow: var(--shadow-sm);
         }
 
-        .item-text {
-            flex: 1;
-            padding-right: 1rem;
-        }
-
-        .item-status {
+        .status-selector {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.25rem;
         }
 
         .status-btn {
-            width: 36px;
-            height: 36px;
-            border: 2px solid;
+            width: 2rem;
+            height: 2rem;
             border-radius: 50%;
+            border: 2px solid transparent;
             background: none;
-            font-size: 1rem;
-            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.15s ease;
+        }
+
+        .status-btn:hover {
+            transform: scale(1.1);
         }
 
         .status-btn.selected {
@@ -238,44 +331,44 @@
         }
 
         .status-conforme {
-            color: #27ae60;
-            border-color: #27ae60;
+            color: var(--color-success);
+            border-color: var(--color-success);
         }
 
         .status-conforme.selected {
-            background: #27ae60;
+            background: var(--color-success);
         }
 
         .status-observacion {
-            color: #f39c12;
-            border-color: #f39c12;
+            color: var(--color-warning);
+            border-color: var(--color-warning);
         }
 
         .status-observacion.selected {
-            background: #f39c12;
+            background: var(--color-warning);
         }
 
         .status-no-conforme {
-            color: #e74c3c;
-            border-color: #e74c3c;
+            color: var(--color-danger);
+            border-color: var(--color-danger);
         }
 
         .status-no-conforme.selected {
-            background: #e74c3c;
+            background: var(--color-danger);
         }
 
-        /* PANEL DE ASISTENCIA */
+        /* ===== ASISTENCIA ===== */
         .assistance-panel {
-            background: #f8f9fa;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
             padding: 1.5rem;
-            border: 1px solid #dee2e6;
-            border-radius: 6px;
-            margin-top: 2rem;
         }
 
-        .counters {
-            display: flex;
-            gap: 3rem;
+        .counter-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
             margin-bottom: 1.5rem;
         }
 
@@ -284,740 +377,1071 @@
         }
 
         .counter-value {
-            display: block;
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: 700;
+            line-height: 1;
+            display: block;
         }
 
         .counter-label {
-            font-size: 0.9rem;
-            color: #666;
+            font-size: 0.875rem;
+            color: var(--color-text-light);
+            margin-top: 0.25rem;
         }
 
-        .counter-observaciones .counter-value { color: #f39c12; }
-        .counter-no-conformes .counter-value { color: #e74c3c; }
+        .counter-observaciones .counter-value { color: var(--color-warning); }
+        .counter-no-conformes .counter-value { color: var(--color-danger); }
 
         .assistance-message {
             padding: 1rem;
             background: white;
-            border-left: 4px solid #3498db;
+            border-radius: var(--radius);
+            border-left: 4px solid var(--color-akina);
             font-style: italic;
+            font-size: 0.875rem;
         }
 
-        /* VISTA PREVIA */
+        /* ===== VISTA PREVIA ===== */
         .report-preview {
             background: white;
-            padding: 2.5rem;
-            margin: 2rem 0;
-            border: 1px solid #ddd;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            position: relative;
         }
 
         .report-header {
             text-align: center;
-            margin-bottom: 2.5rem;
             padding-bottom: 1.5rem;
-            border-bottom: 1px solid #eee;
-        }
-
-        .report-header h2 {
-            color: #2c3e50;
-            margin-bottom: 0.5rem;
-        }
-
-        .report-info {
-            display: flex;
-            justify-content: space-between;
+            border-bottom: 2px solid var(--color-border);
             margin-bottom: 2rem;
+        }
+
+        .report-info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
             padding: 1.5rem;
-            background: #f8f9fa;
-            border-radius: 6px;
+            background: #f8fafc;
+            border-radius: var(--radius);
+            margin-bottom: 2rem;
         }
 
-        .recommendation-badge {
-            display: inline-block;
-            padding: 0.5rem 1.5rem;
-            border-radius: 20px;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-        }
-
-        .badge-apto {
-            background: rgba(39, 174, 96, 0.1);
-            color: #27ae60;
-        }
-
-        .badge-observaciones {
-            background: rgba(243, 156, 18, 0.1);
-            color: #f39c12;
-        }
-
-        .badge-no-recomendado {
-            background: rgba(231, 76, 60, 0.1);
-            color: #e74c3c;
-        }
-
-        /* BOTONES */
-        .action-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin: 2.5rem 0;
-        }
-
-        .btn {
-            padding: 0.75rem 2rem;
-            border: none;
-            border-radius: 4px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
+        .recommendation-display {
+            display: inline-flex;
             align-items: center;
             gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-lg);
+            font-weight: 600;
+            font-size: 0.875rem;
         }
 
-        .btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        .recommendation-display-apto {
+            background: #d1fae5;
+            color: var(--color-success);
+        }
+
+        .recommendation-display-observaciones {
+            background: #fef3c7;
+            color: var(--color-warning);
+        }
+
+        .recommendation-display-no-recomendado {
+            background: #fee2e2;
+            color: var(--color-danger);
+        }
+
+        .checklist-summary-item {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .checklist-summary-item:last-child {
+            border-bottom: none;
+        }
+
+        /* ===== BOTONES ===== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.625rem 1.25rem;
+            border: 1px solid transparent;
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            font-weight: 500;
+            line-height: 1.25;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            user-select: none;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         .btn-primary {
-            background: #2c3e50;
+            background: var(--color-akina);
             color: white;
+            border-color: var(--color-akina);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
         }
 
         .btn-success {
-            background: #27ae60;
+            background: var(--color-success);
             color: white;
+            border-color: var(--color-success);
         }
 
-        /* FOOTER */
-        .site-footer {
-            text-align: center;
+        .btn-success:hover:not(:disabled) {
+            background: #047857;
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border-color: var(--color-border);
+            color: var(--color-text);
+        }
+
+        .btn-outline:hover:not(:disabled) {
+            background: #f9fafb;
+            border-color: var(--color-akina-light);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* ===== FOOTER ===== */
+        .app-footer {
             padding: 2rem 0;
-            color: #666;
-            font-size: 0.9rem;
-            border-top: 1px solid #e0e0e0;
-            margin-top: 2rem;
+            border-top: 1px solid var(--color-border);
+            margin-top: 3rem;
+            color: var(--color-text-light);
+            font-size: 0.875rem;
         }
 
         .developer-credit {
-            color: #666;
+            color: var(--color-text-light);
             text-decoration: none;
-            margin-top: 0.5rem;
-            display: inline-block;
+            transition: color 0.15s ease;
         }
 
         .developer-credit:hover {
-            text-decoration: underline;
+            color: var(--color-akina);
         }
 
-        /* UTILIDADES */
-        .text-center { text-align: center; }
-        .mb-1 { margin-bottom: 0.5rem; }
-        .mb-2 { margin-bottom: 1rem; }
-        .mb-3 { margin-bottom: 1.5rem; }
-        .mt-2 { margin-top: 1rem; }
-        .mt-3 { margin-top: 1.5rem; }
+        /* ===== UTILIDADES ===== */
+        .mt-1 { margin-top: 0.25rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-3 { margin-top: 0.75rem; }
+        .mt-4 { margin-top: 1rem; }
+        .mt-6 { margin-top: 1.5rem; }
+        .mt-8 { margin-top: 2rem; }
+        .mb-1 { margin-bottom: 0.25rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-3 { margin-bottom: 0.75rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-6 { margin-bottom: 1.5rem; }
+        .mb-8 { margin-bottom: 2rem; }
+        .mx-auto { margin-left: auto; margin-right: auto; }
 
-        /* RESPONSIVE */
+        .hidden { display: none !important; }
+
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
-            .vehicle-grid,
-            .recommendation-options,
-            .counters {
+            .grid-cols-2,
+            .grid-cols-3,
+            .grid-cols-4 {
                 grid-template-columns: 1fr;
-                flex-direction: column;
             }
-            
-            .report-info {
+
+            .recommendation-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .counter-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .report-info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-group {
                 flex-direction: column;
-                gap: 1.5rem;
+                width: 100%;
+            }
+
+            .btn-group .btn {
+                width: 100%;
             }
         }
 
-        /* IMPRESIÓN */
+        /* ===== ANIMACIONES ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        /* ===== IMPRESIÓN ===== */
         @media print {
             .no-print,
-            .action-buttons {
-                display: none;
+            .btn-group,
+            .assistance-panel,
+            .checklist-section {
+                display: none !important;
             }
-            
+
             body {
-                padding: 0;
                 background: white;
+                padding: 0;
             }
-            
+
             .report-preview {
                 border: none;
                 padding: 0;
-                margin: 0;
+                box-shadow: none;
+                max-width: none;
+            }
+
+            .container {
+                max-width: none;
+                padding: 0;
             }
         }
     </style>
 </head>
 <body>
-    <header class="site-header">
-        <h1>AKINA CHECK</h1>
-        <p>Informe profesional de inspección vehicular</p>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="container">
+            <div class="brand">
+                <div class="brand-icon">AC</div>
+                <div>
+                    <div class="text-xl font-bold text-akina">AKINA CHECK</div>
+                    <div class="text-sm text-muted">Informe profesional de inspección vehicular</div>
+                </div>
+            </div>
+        </div>
     </header>
 
-    <main>
-        <!-- PORTADA -->
-        <section class="cover">
+    <main class="container">
+        <!-- Portada -->
+        <section class="card card-lg cover mt-8 animate-fadeIn">
             <div class="cover-title">
-                <h2>Informe de inspección vehicular</h2>
-                <p>Evaluación técnica pre-compra</p>
+                <h1 class="text-3xl font-bold text-akina mb-2">Informe de Inspección Vehicular</h1>
+                <p class="text-muted">Evaluación técnica pre-compra | Documento profesional</p>
             </div>
 
-            <div class="recommendation-section">
-                <h3 class="recommendation-title">Recomendación del inspector</h3>
+            <!-- Recomendación -->
+            <div class="card mb-6">
+                <div class="card-header">
+                    <h2 class="text-xl font-semibold">Evaluación del Inspector</h2>
+                    <p class="text-sm text-muted mt-1">Seleccione su recomendación basada en el análisis técnico</p>
+                </div>
                 
-                <div class="recommendation-options">
-                    <div class="option option-apto" data-value="apto">
-                        <div class="option-icon">🟢</div>
-                        <div class="option-text">Apto para compra</div>
+                <div class="recommendation-grid">
+                    <div class="recommendation-card recommendation-apto" data-value="apto">
+                        <div class="recommendation-icon">🟢</div>
+                        <h3 class="font-semibold">Apto para compra</h3>
+                        <p class="text-sm text-muted mt-1">Vehículo en condiciones óptimas</p>
                     </div>
                     
-                    <div class="option option-observaciones" data-value="observaciones">
-                        <div class="option-icon">🟡</div>
-                        <div class="option-text">Apto con observaciones</div>
+                    <div class="recommendation-card recommendation-observaciones" data-value="observaciones">
+                        <div class="recommendation-icon">🟡</div>
+                        <h3 class="font-semibold">Apto con observaciones</h3>
+                        <p class="text-sm text-muted mt-1">Requiere ajustes o reparaciones menores</p>
                     </div>
                     
-                    <div class="option option-no-recomendado" data-value="no-recomendado">
-                        <div class="option-icon">🔴</div>
-                        <div class="option-text">No recomendado</div>
+                    <div class="recommendation-card recommendation-no-recomendado" data-value="no-recomendado">
+                        <div class="recommendation-icon">🔴</div>
+                        <h3 class="font-semibold">No recomendado</h3>
+                        <p class="text-sm text-muted mt-1">Problemas críticos detectados</p>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Fundamento de la evaluación (máx. 200 caracteres)</label>
-                    <textarea id="fundamento" class="form-textarea" placeholder="Base técnica de la recomendación..." maxlength="200"></textarea>
-                    <div class="text-right mt-1" style="font-size: 0.85rem; color: #666;">
-                        <span id="char-count">0</span>/200
+                    <label class="form-label">Fundamento técnico (máx. 200 caracteres)</label>
+                    <textarea id="fundamento" class="form-control form-textarea" placeholder="Describa brevemente el razonamiento técnico de su evaluación..." maxlength="200"></textarea>
+                    <div class="flex justify-between items-center mt-2">
+                        <span class="text-xs text-muted">Lenguaje claro y profesional</span>
+                        <span class="text-xs font-mono">
+                            <span id="char-count">0</span>/200
+                        </span>
                     </div>
                 </div>
             </div>
 
-            <div class="vehicle-grid">
+            <!-- Datos del vehículo -->
+            <div class="grid grid-cols-2 gap-6">
                 <div class="form-group">
                     <label class="form-label">Vehículo</label>
-                    <input type="text" id="vehiculo" class="form-input" placeholder="Ej: Toyota Corolla 1.8">
+                    <input type="text" id="vehiculo" class="form-control" placeholder="Marca, modelo, versión">
                 </div>
                 
                 <div class="form-group">
-                    <label class="form-label">Dominio</label>
-                    <input type="text" id="dominio" class="form-input" placeholder="Ej: AB 123 CD">
+                    <label class="form-label">Dominio / Patente</label>
+                    <input type="text" id="dominio" class="form-control" placeholder="Ej: AB 123 CD">
                 </div>
                 
                 <div class="form-group">
                     <label class="form-label">Kilometraje</label>
-                    <input type="text" id="kilometraje" class="form-input" placeholder="Ej: 85.500 km">
+                    <input type="text" id="kilometraje" class="form-control" placeholder="Ej: 125.500 km">
                 </div>
                 
                 <div class="form-group">
                     <label class="form-label">Fecha de inspección</label>
-                    <input type="date" id="fecha" class="form-input">
+                    <input type="date" id="fecha" class="form-control">
                 </div>
             </div>
         </section>
 
-        <!-- CONTENIDO PRINCIPAL -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
-            <!-- DATOS Y OBSERVACIONES -->
-            <section>
-                <div style="background: white; padding: 2rem; border: 1px solid #ddd; border-radius: 6px;">
-                    <h3 style="color: #2c3e50; margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 2px solid #f0f0f0;">
-                        📋 Datos del vehículo
-                    </h3>
+        <!-- Contenido principal -->
+        <div class="grid grid-cols-2 gap-8 mt-8">
+            <!-- Datos y observaciones -->
+            <section class="animate-fadeIn" style="animation-delay: 0.1s">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="text-xl font-semibold">📋 Datos del vehículo</h2>
+                    </div>
                     
                     <div class="form-group">
                         <label class="form-label">Observaciones generales</label>
-                        <textarea id="observaciones-generales" class="form-textarea" rows="4" placeholder="Anotaciones relevantes sobre el vehículo..."></textarea>
+                        <textarea id="observaciones" class="form-control form-textarea" rows="4" placeholder="Anotaciones relevantes no cubiertas en el checklist..."></textarea>
                     </div>
 
-                    <div class="assistance-panel">
-                        <div class="counters">
+                    <!-- Asistencia inteligente -->
+                    <div class="assistance-panel mt-6">
+                        <div class="counter-grid">
                             <div class="counter counter-observaciones">
                                 <span class="counter-value" id="contador-observaciones">0</span>
-                                <span class="counter-label">Observaciones</span>
+                                <span class="counter-label">Observaciones detectadas</span>
                             </div>
                             
                             <div class="counter counter-no-conformes">
                                 <span class="counter-value" id="contador-no-conformes">0</span>
-                                <span class="counter-label">No conformes</span>
+                                <span class="counter-label">Ítems no conformes</span>
                             </div>
                         </div>
                         
                         <div class="assistance-message" id="mensaje-asistencia">
-                            Complete el checklist para obtener información contextual.
+                            <!-- Mensaje dinámico -->
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- CHECKLIST -->
-            <section>
-                <div style="background: white; padding: 2rem; border: 1px solid #ddd; border-radius: 6px; height: 100%;">
-                    <h3 style="color: #2c3e50; margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 2px solid #f0f0f0;">
-                        ✅ Checklist de inspección
-                    </h3>
+            <!-- Checklist -->
+            <section class="animate-fadeIn" style="animation-delay: 0.2s">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="flex justify-between items-center">
+                            <h2 class="text-xl font-semibold">✅ Checklist técnico</h2>
+                            <div class="text-sm text-muted">15 ítems</div>
+                        </div>
+                    </div>
                     
-                    <div class="checklist-container" id="checklist-container">
+                    <div class="checklist-section" id="checklist-container">
                         <!-- Generado dinámicamente -->
                     </div>
                 </div>
             </section>
         </div>
 
-        <!-- VISTA PREVIA -->
-        <section class="report-preview" id="report-preview">
-            <div class="report-header">
-                <h2>INFORME DE INSPECCIÓN VEHICULAR</h2>
-                <p style="color: #666;">AKINA CHECK · Evaluación técnica</p>
-            </div>
-            
-            <div class="report-info">
-                <div>
-                    <div class="mb-1"><strong>Vehículo:</strong> <span id="preview-vehiculo">[No especificado]</span></div>
-                    <div class="mb-1"><strong>Dominio:</strong> <span id="preview-dominio">[No especificado]</span></div>
-                    <div class="mb-1"><strong>Kilometraje:</strong> <span id="preview-kilometraje">[No especificado]</span></div>
-                    <div><strong>Fecha:</strong> <span id="preview-fecha">[No especificada]</span></div>
+        <!-- Vista previa -->
+        <section class="mt-8 animate-fadeIn" style="animation-delay: 0.3s">
+            <div class="report-preview" id="report-preview">
+                <div class="report-header">
+                    <h2 class="text-3xl font-bold text-akina">INFORME DE INSPECCIÓN VEHICULAR</h2>
+                    <div class="text-sm text-muted mt-2">AKINA CHECK | Documento técnico profesional</div>
                 </div>
                 
-                <div>
-                    <div class="mb-1"><strong>Evaluación:</strong></div>
-                    <div class="recommendation-badge" id="preview-recomendacion">No seleccionada</div>
-                    <div id="preview-fundamento" style="font-size: 0.9rem; color: #666; max-width: 300px;">[No especificado]</div>
+                <div class="report-info-grid">
+                    <div class="space-y-2">
+                        <div>
+                            <div class="text-sm text-muted">Vehículo</div>
+                            <div class="font-semibold" id="preview-vehiculo">[No especificado]</div>
+                        </div>
+                        <div>
+                            <div class="text-sm text-muted">Dominio</div>
+                            <div class="font-semibold" id="preview-dominio">[No especificado]</div>
+                        </div>
+                        <div>
+                            <div class="text-sm text-muted">Kilometraje</div>
+                            <div class="font-semibold" id="preview-kilometraje">[No especificado]</div>
+                        </div>
+                        <div>
+                            <div class="text-sm text-muted">Fecha de inspección</div>
+                            <div class="font-semibold" id="preview-fecha">[No especificada]</div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <div class="text-sm text-muted mb-2">Evaluación del inspector</div>
+                            <div class="recommendation-display" id="preview-recomendacion">
+                                No seleccionada
+                            </div>
+                        </div>
+                        <div>
+                            <div class="text-sm text-muted mb-2">Fundamento técnico</div>
+                            <div class="text-sm" id="preview-fundamento">[No especificado]</div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="mb-3">
-                <h4 style="color: #2c3e50; margin-bottom: 1rem;">Observaciones generales</h4>
-                <p id="preview-observaciones">[Sin observaciones generales]</p>
-            </div>
-            
-            <div id="checklist-resumen">
-                <!-- Generado dinámicamente -->
-            </div>
-            
-            <div style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #eee;">
-                <p style="font-weight: 500;">Informe realizado por Akina Check</p>
-                <p style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;">
+                
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-3">Observaciones generales</h3>
+                    <div class="text-sm" id="preview-observaciones">[Sin observaciones generales]</div>
+                </div>
+                
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-3">Resumen de verificación técnica</h3>
+                    <div id="checklist-resumen">
+                        <!-- Generado dinámicamente -->
+                    </div>
+                </div>
+                
+                <div class="divider"></div>
+                
+                <div class="flex justify-between items-center text-sm text-muted">
+                    <div>Informe realizado por Akina Check</div>
+                    <div>Documento generado: <span id="fecha-generacion"></span></div>
+                </div>
+                <div class="text-xs text-center text-muted mt-2">
                     Desarrollado por AFM Solutions · afmsolutions.com.ar
-                </p>
+                </div>
             </div>
         </section>
 
-        <!-- BOTONES DE ACCIÓN -->
-        <div class="action-buttons no-print">
-            <button class="btn btn-primary" id="btn-actualizar">
-                🔄 Actualizar vista previa
-            </button>
-            <button class="btn btn-success" id="btn-pdf">
-                📄 Generar PDF
-            </button>
+        <!-- Acciones -->
+        <div class="flex justify-center gap-4 mt-8 mb-8 no-print">
+            <div class="btn-group">
+                <button class="btn btn-outline" id="btn-actualizar">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                    </svg>
+                    Actualizar vista previa
+                </button>
+                <button class="btn btn-success" id="btn-pdf">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    Generar PDF
+                </button>
+            </div>
         </div>
 
-        <!-- AVISO COMERCIAL -->
-        <div class="text-center no-print" style="color: #666; font-size: 0.9rem; padding: 1rem; border-top: 1px solid #eee; margin-top: 2rem;">
-            Versión de muestra. Funciones avanzadas disponibles bajo contratación.
+        <!-- Aviso comercial -->
+        <div class="text-center text-sm text-muted mt-8 mb-8 no-print">
+            <div class="card">
+                <p class="font-medium">Versión de evaluación profesional</p>
+                <p class="mt-1">Funciones avanzadas disponibles bajo contratación</p>
+            </div>
         </div>
     </main>
 
-    <footer class="site-footer">
-        <div>AKINA CHECK · Sistema de informes de inspección vehicular</div>
-        <a href="https://afmsolutions.com.ar" class="developer-credit">
-            Desarrollado por AFM Solutions · afmsolutions.com.ar
-        </a>
+    <!-- Footer -->
+    <footer class="app-footer">
+        <div class="container">
+            <div class="text-center space-y-2">
+                <div class="font-medium">AKINA CHECK · Sistema de informes de inspección vehicular</div>
+                <div>
+                    <a href="https://afmsolutions.com.ar" class="developer-credit" target="_blank">
+                        Desarrollado por AFM Solutions · afmsolutions.com.ar
+                    </a>
+                </div>
+            </div>
+        </div>
     </footer>
 
+    <!-- Script principal -->
     <script>
-        // DATOS DEL CHECKLIST
-        const checklistItems = [
-            { id: 1, categoria: 'critico', texto: 'Motor: funcionamiento, ruidos anormales, fugas de aceite o refrigerante' },
-            { id: 2, categoria: 'critico', texto: 'Transmisión: cambios, ruidos, fugas de aceite' },
-            { id: 3, categoria: 'critico', texto: 'Sistema de frenos: funcionamiento, desgaste de pastillas, nivel de líquido' },
-            { id: 4, categoria: 'seguridad', texto: 'Suspensión: amortiguadores, brazos, rótulas, silentblocks' },
-            { id: 5, categoria: 'seguridad', texto: 'Dirección: alineación, funcionamiento, juego en volante' },
-            { id: 6, categoria: 'seguridad', texto: 'Neumáticos: desgaste, presión, estado general' },
-            { id: 7, categoria: 'seguridad', texto: 'Sistema eléctrico: batería, alternador, luces, instrumentos' },
-            { id: 8, categoria: 'legal', texto: 'Documentación: VTV vigente, cédula verde/azul, patente' },
-            { id: 9, categoria: 'legal', texto: 'Identificación: número de chasis y motor coincidentes con documentación' },
-            { id: 10, categoria: 'legal', texto: 'Historial: verificación de choques importantes o reparaciones estructurales' },
-            { id: 11, categoria: 'estetico', texto: 'Carrocería: pintura, abolladuras, óxido, estado general' },
-            { id: 12, categoria: 'estetico', texto: 'Interior: tapizados, tablero, funcionamiento de accesorios' },
-            { id: 13, categoria: 'estetico', texto: 'Vidrios y espejos: estado, funcionamiento' },
-            { id: 14, categoria: 'estetico', texto: 'Limpieza general: interior y exterior' },
-            { id: 15, categoria: 'seguridad', texto: 'Seguridad activa: ABS, ESP, airbags (verificar testigos)' }
-        ];
-
-        const categorias = {
-            critico: { nombre: 'Crítico', color: '#c0392b' },
-            seguridad: { nombre: 'Seguridad', color: '#e67e22' },
-            legal: { nombre: 'Legal', color: '#2980b9' },
-            estetico: { nombre: 'Estético', color: '#7f8c8d' }
+        // ===== CONFIGURACIÓN =====
+        const CONFIG = {
+            version: '1.0.0',
+            checklist: [
+                { id: 1, categoria: 'critico', texto: 'Motor: funcionamiento, ruidos anormales, fugas de aceite/refrigerante' },
+                { id: 2, categoria: 'critico', texto: 'Transmisión: cambios suaves, ruidos, fugas de aceite' },
+                { id: 3, categoria: 'critico', texto: 'Sistema de frenos: funcionamiento, desgaste, nivel de líquido' },
+                { id: 4, categoria: 'seguridad', texto: 'Suspensión: amortiguadores, brazos, rótulas, silentblocks' },
+                { id: 5, categoria: 'seguridad', texto: 'Dirección: alineación, funcionamiento, juego en volante' },
+                { id: 6, categoria: 'seguridad', texto: 'Neumáticos: desgaste, presión, estado general' },
+                { id: 7, categoria: 'seguridad', texto: 'Sistema eléctrico: batería, alternador, luces, instrumentos' },
+                { id: 8, categoria: 'legal', texto: 'Documentación: VTV vigente, cédula verde/azul, patente' },
+                { id: 9, categoria: 'legal', texto: 'Identificación: chasis y motor coincidentes con documentación' },
+                { id: 10, categoria: 'legal', texto: 'Historial: choques importantes o reparaciones estructurales' },
+                { id: 11, categoria: 'estetico', texto: 'Carrocería: pintura, abolladuras, óxido, estado general' },
+                { id: 12, categoria: 'estetico', texto: 'Interior: tapizados, tablero, funcionamiento de accesorios' },
+                { id: 13, categoria: 'estetico', texto: 'Vidrios y espejos: estado, funcionamiento' },
+                { id: 14, categoria: 'estetico', texto: 'Limpieza general: interior y exterior' },
+                { id: 15, categoria: 'seguridad', texto: 'Seguridad activa: ABS, ESP, airbags (testigos correctos)' }
+            ],
+            categorias: {
+                critico: { nombre: 'Crítico', badge: 'badge-critical' },
+                seguridad: { nombre: 'Seguridad', badge: 'badge-safety' },
+                legal: { nombre: 'Legal', badge: 'badge-legal' },
+                estetico: { nombre: 'Estético', badge: 'badge-esthetic' }
+            },
+            estados: {
+                'conforme': { texto: 'Conforme', clase: 'status-conforme' },
+                'observacion': { texto: 'Observación', clase: 'status-observacion' },
+                'no-conforme': { texto: 'No conforme', clase: 'status-no-conforme' },
+                'no-evaluado': { texto: 'No evaluado', clase: '' }
+            }
         };
 
-        // ESTADO
-        let estado = {
+        // ===== ESTADO =====
+        const AppState = {
             recomendacion: null,
-            checklist: {}
+            checklist: {},
+            ultimaActualizacion: null,
+            
+            // Métodos de estado
+            setRecomendacion(valor) {
+                this.recomendacion = valor;
+                this.guardarEnStorage();
+                return this;
+            },
+            
+            setChecklistItem(id, estado) {
+                this.checklist[id] = estado;
+                this.guardarEnStorage();
+                return this;
+            },
+            
+            guardarEnStorage() {
+                try {
+                    const estado = {
+                        recomendacion: this.recomendacion,
+                        checklist: this.checklist,
+                        timestamp: Date.now()
+                    };
+                    localStorage.setItem('akina-check-state', JSON.stringify(estado));
+                } catch (e) {
+                    console.warn('No se pudo guardar en localStorage:', e);
+                }
+            },
+            
+            cargarDesdeStorage() {
+                try {
+                    const guardado = localStorage.getItem('akina-check-state');
+                    if (guardado) {
+                        const estado = JSON.parse(guardado);
+                        this.recomendacion = estado.recomendacion;
+                        this.checklist = estado.checklist || {};
+                    }
+                } catch (e) {
+                    console.warn('No se pudo cargar desde localStorage:', e);
+                }
+                return this;
+            },
+            
+            reset() {
+                this.recomendacion = null;
+                this.checklist = {};
+                localStorage.removeItem('akina-check-state');
+                return this;
+            }
         };
 
-        // INICIALIZACIÓN
-        document.addEventListener('DOMContentLoaded', function() {
-            // Fecha actual
-            const hoy = new Date().toISOString().split('T')[0];
-            document.getElementById('fecha').value = hoy;
+        // ===== DOM Y UTILIDADES =====
+        const DOM = {
+            get(id) {
+                return document.getElementById(id);
+            },
             
-            // Inicializar checklist
-            inicializarChecklist();
+            crear(tag, clases = '', contenido = '') {
+                const el = document.createElement(tag);
+                if (clases) el.className = clases;
+                if (contenido) el.innerHTML = contenido;
+                return el;
+            },
             
-            // Eventos
-            configurarEventos();
+            formatearFecha(fechaStr) {
+                if (!fechaStr) return '[No especificada]';
+                const fecha = new Date(fechaStr);
+                return fecha.toLocaleDateString('es-AR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                });
+            },
             
-            // Vista previa inicial
-            actualizarVistaPrevia();
-        });
+            obtenerValorCampo(id, defecto = '') {
+                const campo = this.get(id);
+                return campo ? campo.value.trim() : defecto;
+            }
+        };
 
-        // CHECKLIST
-        function inicializarChecklist() {
-            const contenedor = document.getElementById('checklist-container');
-            contenedor.innerHTML = '';
-
-            // Agrupar por categoría
-            const itemsPorCategoria = {};
-            checklistItems.forEach(item => {
-                if (!itemsPorCategoria[item.categoria]) {
-                    itemsPorCategoria[item.categoria] = [];
-                }
-                itemsPorCategoria[item.categoria].push(item);
-            });
-
-            // Crear secciones
-            Object.keys(categorias).forEach(categoriaId => {
-                const categoria = categorias[categoriaId];
-                const items = itemsPorCategoria[categoriaId] || [];
-
-                if (items.length === 0) return;
-
-                const seccion = document.createElement('div');
-                seccion.className = 'checklist-category';
-
-                const header = document.createElement('div');
-                header.className = 'category-header';
-                header.style.backgroundColor = categoria.color;
-                header.innerHTML = `<span>${categoria.nombre}</span><span>${items.length}</span>`;
-                seccion.appendChild(header);
-
-                // Items
-                items.forEach(item => {
-                    const elemento = document.createElement('div');
-                    elemento.className = 'checklist-item';
-                    elemento.dataset.id = item.id;
-
-                    elemento.innerHTML = `
-                        <div class="item-text">${item.texto}</div>
-                        <div class="item-status">
-                            <button class="status-btn status-conforme" data-estado="conforme" title="Conforme">
+        // ===== CHECKLIST MANAGER =====
+        const ChecklistManager = {
+            init() {
+                this.render();
+                this.cargarEstadosGuardados();
+                this.setupEventos();
+            },
+            
+            render() {
+                const container = DOM.get('checklist-container');
+                container.innerHTML = '';
+                
+                // Agrupar por categoría
+                const itemsPorCategoria = this.agruparPorCategoria();
+                
+                // Renderizar cada categoría
+                Object.entries(itemsPorCategoria).forEach(([categoriaId, items]) => {
+                    const categoria = CONFIG.categorias[categoriaId];
+                    
+                    const seccionCategoria = DOM.crear('div', 'mb-6');
+                    
+                    // Header de categoría
+                    const header = DOM.crear('div', 'flex items-center gap-2 mb-3');
+                    header.innerHTML = `
+                        <span class="${categoria.badge}">${categoria.nombre}</span>
+                        <span class="text-sm text-muted">${items.length} ítems</span>
+                    `;
+                    seccionCategoria.appendChild(header);
+                    
+                    // Items
+                    items.forEach(item => {
+                        const estadoActual = AppState.checklist[item.id] || null;
+                        seccionCategoria.appendChild(this.crearItem(item, estadoActual));
+                    });
+                    
+                    container.appendChild(seccionCategoria);
+                });
+            },
+            
+            agruparPorCategoria() {
+                return CONFIG.checklist.reduce((grupos, item) => {
+                    if (!grupos[item.categoria]) {
+                        grupos[item.categoria] = [];
+                    }
+                    grupos[item.categoria].push(item);
+                    return grupos;
+                }, {});
+            },
+            
+            crearItem(item, estadoActual) {
+                const div = DOM.crear('div', 'checklist-item');
+                div.dataset.id = item.id;
+                
+                div.innerHTML = `
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <div class="font-medium text-sm">${item.texto}</div>
+                        </div>
+                        <div class="status-selector">
+                            <button class="status-btn status-conforme ${estadoActual === 'conforme' ? 'selected' : ''}" 
+                                    data-estado="conforme" title="Conforme">
                                 ✓
                             </button>
-                            <button class="status-btn status-observacion" data-estado="observacion" title="Observación">
+                            <button class="status-btn status-observacion ${estadoActual === 'observacion' ? 'selected' : ''}" 
+                                    data-estado="observacion" title="Observación">
                                 !
                             </button>
-                            <button class="status-btn status-no-conforme" data-estado="no-conforme" title="No conforme">
+                            <button class="status-btn status-no-conforme ${estadoActual === 'no-conforme' ? 'selected' : ''}" 
+                                    data-estado="no-conforme" title="No conforme">
                                 ✗
                             </button>
                         </div>
-                    `;
-
-                    // Estado inicial
-                    estado.checklist[item.id] = null;
-
-                    // Eventos
-                    elemento.querySelectorAll('.status-btn').forEach(boton => {
-                        boton.addEventListener('click', function() {
-                            const itemId = parseInt(elemento.dataset.id);
-                            const nuevoEstado = this.dataset.estado;
-                            establecerEstadoChecklist(itemId, nuevoEstado, elemento);
-                        });
-                    });
-
-                    seccion.appendChild(elemento);
-                });
-
-                contenedor.appendChild(seccion);
-            });
-
-            actualizarContadores();
-        }
-
-        function establecerEstadoChecklist(itemId, estadoNuevo, elemento) {
-            estado.checklist[itemId] = estadoNuevo;
-
-            // Actualizar UI
-            elemento.querySelectorAll('.status-btn').forEach(boton => {
-                boton.classList.remove('selected');
-                if (boton.dataset.estado === estadoNuevo) {
-                    boton.classList.add('selected');
-                }
-            });
-
-            actualizarContadores();
-            actualizarMensajeAsistencia();
-        }
-
-        // CONTADORES Y ASISTENCIA
-        function actualizarContadores() {
-            let observaciones = 0;
-            let noConformes = 0;
-
-            Object.values(estado.checklist).forEach(estadoItem => {
-                if (estadoItem === 'observacion') observaciones++;
-                if (estadoItem === 'no-conforme') noConformes++;
-            });
-
-            document.getElementById('contador-observaciones').textContent = observaciones;
-            document.getElementById('contador-no-conformes').textContent = noConformes;
-        }
-
-        function actualizarMensajeAsistencia() {
-            const elemento = document.getElementById('mensaje-asistencia');
-            const observaciones = parseInt(document.getElementById('contador-observaciones').textContent);
-            const noConformes = parseInt(document.getElementById('contador-no-conformes').textContent);
-
-            let mensaje = 'Complete el checklist para obtener información contextual.';
-
-            if (noConformes > 0) {
-                mensaje = 'Se detectaron ítems no conformes. Requieren atención prioritaria.';
-            } else if (observaciones > 3) {
-                mensaje = 'Múltiples observaciones detectadas. Considere posibles implicaciones económicas.';
-            } else if (observaciones > 0) {
-                mensaje = 'Observaciones detectadas. Incorpórelas en su evaluación final.';
-            }
-
-            elemento.textContent = mensaje;
-        }
-
-        // VISTA PREVIA
-        function actualizarVistaPrevia() {
-            actualizarDatosVehiculo();
-            actualizarRecomendacion();
-            actualizarChecklistResumen();
-        }
-
-        function actualizarDatosVehiculo() {
-            document.getElementById('preview-vehiculo').textContent = 
-                obtenerValor('vehiculo', '[No especificado]');
-            
-            document.getElementById('preview-dominio').textContent = 
-                obtenerValor('dominio', '[No especificado]');
-            
-            document.getElementById('preview-kilometraje').textContent = 
-                obtenerValor('kilometraje', '[No especificado]');
-            
-            const fecha = obtenerValor('fecha');
-            document.getElementById('preview-fecha').textContent = 
-                fecha ? formatearFecha(fecha) : '[No especificada]';
-            
-            document.getElementById('preview-observaciones').textContent = 
-                obtenerValor('observaciones-generales', '[Sin observaciones generales]');
-        }
-
-        function actualizarRecomendacion() {
-            const fundamento = obtenerValor('fundamento');
-            document.getElementById('preview-fundamento').textContent = fundamento || '[No especificado]';
-
-            const badge = document.getElementById('preview-recomendacion');
-            
-            switch(estado.recomendacion) {
-                case 'apto':
-                    badge.className = 'recommendation-badge badge-apto';
-                    badge.textContent = 'Apto para compra';
-                    break;
-                case 'observaciones':
-                    badge.className = 'recommendation-badge badge-observaciones';
-                    badge.textContent = 'Apto con observaciones';
-                    break;
-                case 'no-recomendado':
-                    badge.className = 'recommendation-badge badge-no-recomendado';
-                    badge.textContent = 'No recomendado';
-                    break;
-                default:
-                    badge.className = 'recommendation-badge';
-                    badge.textContent = 'No seleccionada';
-            }
-        }
-
-        function actualizarChecklistResumen() {
-            const contenedor = document.getElementById('checklist-resumen');
-            contenedor.innerHTML = '<h4 style="color: #2c3e50; margin-bottom: 1rem;">Resumen del checklist</h4>';
-
-            // Por categoría
-            Object.keys(categorias).forEach(categoriaId => {
-                const categoria = categorias[categoriaId];
-                const items = checklistItems.filter(item => item.categoria === categoriaId);
-
-                if (items.length === 0) return;
-
-                const seccion = document.createElement('div');
-                seccion.className = 'mb-3';
-                seccion.innerHTML = `<h5 style="color: ${categoria.color}; margin-bottom: 0.5rem;">${categoria.nombre}</h5>`;
-
-                items.forEach(item => {
-                    const estadoItem = estado.checklist[item.id] || 'no-evaluado';
-                    const textoEstado = obtenerTextoEstado(estadoItem);
-                    const claseEstado = `estado-${estadoItem}`;
-
-                    const fila = document.createElement('div');
-                    fila.className = 'mb-1';
-                    fila.style.display = 'flex';
-                    fila.style.justifyContent = 'space-between';
-                    fila.style.padding = '0.25rem 0';
-                    fila.style.borderBottom = '1px solid #f0f0f0';
-                    
-                    fila.innerHTML = `
-                        <span>${item.texto}</span>
-                        <span style="font-weight: 500; color: ${obtenerColorEstado(estadoItem)}">${textoEstado}</span>
-                    `;
-                    
-                    seccion.appendChild(fila);
-                });
-
-                contenedor.appendChild(seccion);
-            });
-        }
-
-        // EVENTOS
-        function configurarEventos() {
-            // Opciones de recomendación
-            document.querySelectorAll('.option').forEach(opcion => {
-                opcion.addEventListener('click', function() {
-                    document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
-                    this.classList.add('selected');
-                    estado.recomendacion = this.dataset.value;
-                    actualizarRecomendacion();
-                });
-            });
-
-            // Contador de caracteres
-            document.getElementById('fundamento').addEventListener('input', function() {
-                document.getElementById('char-count').textContent = this.value.length;
-            });
-
-            // Campos de formulario
-            ['vehiculo', 'dominio', 'kilometraje', 'fecha', 'fundamento', 'observaciones-generales'].forEach(id => {
-                document.getElementById(id).addEventListener('input', actualizarVistaPrevia);
-            });
-
-            // Botones
-            document.getElementById('btn-actualizar').addEventListener('click', actualizarVistaPrevia);
-            document.getElementById('btn-pdf').addEventListener('click', generarPDF);
-        }
-
-        // PDF
-        async function generarPDF() {
-            if (!estado.recomendacion) {
-                alert('Seleccione una recomendación antes de generar el PDF.');
-                return;
-            }
-
-            if (!document.getElementById('fundamento').value.trim()) {
-                alert('Ingrese el fundamento de la evaluación.');
-                return;
-            }
-
-            const boton = document.getElementById('btn-pdf');
-            const textoOriginal = boton.innerHTML;
-            boton.innerHTML = '🔄 Generando...';
-            boton.disabled = true;
-
-            try {
-                // Cargar librerías
-                await cargarScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
-                await cargarScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
-
-                const elemento = document.getElementById('report-preview');
-                const canvas = await html2canvas(elemento, {
-                    scale: 2,
-                    useCORS: true,
-                    logging: false,
-                    backgroundColor: '#ffffff'
-                });
-
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                const imgData = canvas.toDataURL('image/png');
-                const imgWidth = 190;
-                const imgHeight = canvas.height * imgWidth / canvas.width;
-
-                pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+                    </div>
+                `;
                 
-                // Pie de página
-                pdf.setFontSize(8);
-                pdf.setTextColor(128, 128, 128);
-                pdf.text('Desarrollado por AFM Solutions · afmsolutions.com.ar', 105, 290, { align: 'center' });
-
-                // Descargar
-                const dominio = obtenerValor('dominio') || 'informe';
-                const fecha = obtenerValor('fecha') || new Date().toISOString().split('T')[0];
-                pdf.save(`Informe_AkinaCheck_${dominio}_${fecha}.pdf`);
-
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Error al generar el PDF. Intente nuevamente.');
-            } finally {
-                boton.innerHTML = textoOriginal;
-                boton.disabled = false;
+                return div;
+            },
+            
+            setupEventos() {
+                DOM.get('checklist-container').addEventListener('click', (e) => {
+                    const btn = e.target.closest('.status-btn');
+                    if (!btn) return;
+                    
+                    const item = btn.closest('.checklist-item');
+                    const itemId = parseInt(item.dataset.id);
+                    const nuevoEstado = btn.dataset.estado;
+                    
+                    this.setEstado(itemId, nuevoEstado, item);
+                });
+            },
+            
+            setEstado(itemId, estado, elemento) {
+                // Actualizar estado
+                AppState.setChecklistItem(itemId, estado);
+                
+                // Actualizar UI
+                elemento.querySelectorAll('.status-btn').forEach(btn => {
+                    btn.classList.remove('selected');
+                });
+                elemento.querySelector(`[data-estado="${estado}"]`).classList.add('selected');
+                
+                // Actualizar contadores y asistencia
+                this.actualizarContadores();
+                AsistenciaManager.actualizarMensaje();
+            },
+            
+            cargarEstadosGuardados() {
+                CONFIG.checklist.forEach(item => {
+                    if (AppState.checklist[item.id]) {
+                        const elemento = document.querySelector(`[data-id="${item.id}"]`);
+                        if (elemento) {
+                            const estado = AppState.checklist[item.id];
+                            elemento.querySelectorAll('.status-btn').forEach(btn => {
+                                btn.classList.remove('selected');
+                                if (btn.dataset.estado === estado) {
+                                    btn.classList.add('selected');
+                                }
+                            });
+                        }
+                    }
+                });
+                this.actualizarContadores();
+            },
+            
+            actualizarContadores() {
+                let observaciones = 0;
+                let noConformes = 0;
+                
+                Object.values(AppState.checklist).forEach(estado => {
+                    if (estado === 'observacion') observaciones++;
+                    if (estado === 'no-conforme') noConformes++;
+                });
+                
+                DOM.get('contador-observaciones').textContent = observaciones;
+                DOM.get('contador-no-conformes').textContent = noConformes;
+                
+                return { observaciones, noConformes };
+            },
+            
+            obtenerResumen() {
+                const itemsPorCategoria = this.agruparPorCategoria();
+                let html = '';
+                
+                Object.entries(itemsPorCategoria).forEach(([categoriaId, items]) => {
+                    const categoria = CONFIG.categorias[categoriaId];
+                    
+                    html += `
+                        <div class="mb-4">
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="${categoria.badge}">${categoria.nombre}</span>
+                            </div>
+                    `;
+                    
+                    items.forEach(item => {
+                        const estado = AppState.checklist[item.id] || 'no-evaluado';
+                        const estadoInfo = CONFIG.estados[estado];
+                        const color = estado === 'conforme' ? 'text-green-600' : 
+                                     estado === 'observacion' ? 'text-yellow-600' : 
+                                     estado === 'no-conforme' ? 'text-red-600' : 'text-gray-400';
+                        
+                        html += `
+                            <div class="checklist-summary-item">
+                                <div class="text-sm">${item.texto}</div>
+                                <div class="text-sm font-medium ${color}">${estadoInfo.texto}</div>
+                            </div>
+                        `;
+                    });
+                    
+                    html += `</div>`;
+                });
+                
+                return html;
             }
-        }
+        };
 
-        // UTILIDADES
-        function obtenerValor(id, defecto = '') {
-            const elemento = document.getElementById(id);
-            return elemento ? elemento.value.trim() : defecto;
-        }
+        // ===== ASISTENCIA MANAGER =====
+        const AsistenciaManager = {
+            actualizarMensaje() {
+                const contadores = ChecklistManager.actualizarContadores();
+                const mensajeEl = DOM.get('mensaje-asistencia');
+                
+                let mensaje = 'Complete el checklist para obtener información de contexto.';
+                
+                if (contadores.noConformes > 0) {
+                    mensaje = '<strong>Atención:</strong> Se detectaron ítems no conformes que requieren atención prioritaria antes de considerar la compra.';
+                } else if (contadores.observaciones > 3) {
+                    mensaje = 'Se detectan múltiples observaciones que pueden implicar gastos adicionales a considerar en la evaluación.';
+                } else if (contadores.observaciones > 0) {
+                    mensaje = 'Observaciones detectadas. Considere estas notas en su evaluación profesional final.';
+                }
+                
+                mensajeEl.innerHTML = mensaje;
+            }
+        };
 
-        function formatearFecha(fechaStr) {
-            const fecha = new Date(fechaStr);
-            return fecha.toLocaleDateString('es-AR');
-        }
+        // ===== VISTA PREVIA MANAGER =====
+        const VistaPreviaManager = {
+            actualizar() {
+                this.actualizarDatosVehiculo();
+                this.actualizarRecomendacion();
+                this.actualizarChecklistResumen();
+                this.actualizarFechaGeneracion();
+                
+                AppState.ultimaActualizacion = new Date();
+            },
+            
+            actualizarDatosVehiculo() {
+                DOM.get('preview-vehiculo').textContent = 
+                    DOM.obtenerValorCampo('vehiculo', '[No especificado]');
+                
+                DOM.get('preview-dominio').textContent = 
+                    DOM.obtenerValorCampo('dominio', '[No especificado]');
+                
+                DOM.get('preview-kilometraje').textContent = 
+                    DOM.obtenerValorCampo('kilometraje', '[No especificado]');
+                
+                DOM.get('preview-fecha').textContent = 
+                    DOM.formatearFecha(DOM.obtenerValorCampo('fecha'));
+                
+                const obs = DOM.obtenerValorCampo('observaciones');
+                DOM.get('preview-observaciones').textContent = 
+                    obs || '[Sin observaciones generales]';
+            },
+            
+            actualizarRecomendacion() {
+                const fundamento = DOM.obtenerValorCampo('fundamento');
+                DOM.get('preview-fundamento').textContent = fundamento || '[No especificado]';
+                
+                const badge = DOM.get('preview-recomendacion');
+                badge.className = 'recommendation-display';
+                
+                switch(AppState.recomendacion) {
+                    case 'apto':
+                        badge.className += ' recommendation-display-apto';
+                        badge.textContent = '🟢 Apto para compra';
+                        break;
+                    case 'observaciones':
+                        badge.className += ' recommendation-display-observaciones';
+                        badge.textContent = '🟡 Apto con observaciones';
+                        break;
+                    case 'no-recomendado':
+                        badge.className += ' recommendation-display-no-recomendado';
+                        badge.textContent = '🔴 No recomendado';
+                        break;
+                    default:
+                        badge.textContent = 'No seleccionada';
+                }
+            },
+            
+            actualizarChecklistResumen() {
+                DOM.get('checklist-resumen').innerHTML = ChecklistManager.obtenerResumen();
+            },
+            
+            actualizarFechaGeneracion() {
+                const ahora = new Date();
+                DOM.get('fecha-generacion').textContent = 
+                    `${ahora.toLocaleDateString('es-AR')} ${ahora.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}`;
+            }
+        };
 
-        function obtenerTextoEstado(estado) {
-            const map = {
-                'conforme': 'Conforme',
-                'observacion': 'Observación',
-                'no-conforme': 'No conforme',
-                'no-evaluado': 'No evaluado'
-            };
-            return map[estado] || 'No evaluado';
-        }
-
-        function obtenerColorEstado(estado) {
-            const map = {
-                'conforme': '#27ae60',
-                'observacion': '#f39c12',
-                'no-conforme': '#e74c3c',
-                'no-evaluado': '#95a5a6'
-            };
-            return map[estado] || '#95a5a6';
-        }
-
-        function cargarScript(src) {
-            return new Promise((resolve, reject) => {
-                if (document.querySelector(`script[src="${src}"]`)) {
-                    resolve();
+        // ===== PDF MANAGER =====
+        const PDFManager = {
+            async generar() {
+                // Validaciones
+                if (!AppState.recomendacion) {
+                    this.mostrarError('Por favor, seleccione una evaluación antes de generar el PDF.');
                     return;
                 }
-                const script = document.createElement('script');
-                script.src = src;
-                script.onload = resolve;
-                script.onerror = reject;
-                document.head.appendChild(script);
+                
+                if (!DOM.obtenerValorCampo('fundamento')) {
+                    this.mostrarError('Por favor, ingrese el fundamento técnico de su evaluación.');
+                    return;
+                }
+                
+                // Estado del botón
+                const btn = DOM.get('btn-pdf');
+                const textoOriginal = btn.innerHTML;
+                btn.innerHTML = '🔄 Generando PDF...';
+                btn.disabled = true;
+                
+                try {
+                    // Cargar librerías
+                    await this.cargarLibrerias();
+                    
+                    // Actualizar vista previa antes de capturar
+                    VistaPreviaManager.actualizar();
+                    
+                    // Generar PDF
+                    const elemento = DOM.get('report-preview');
+                    const { jsPDF } = window.jspdf;
+                    
+                    const pdf = new jsPDF({
+                        orientation: 'portrait',
+                        unit: 'mm',
+                        format: 'a4'
+                    });
+                    
+                    // Capturar como imagen
+                    const canvas = await html2canvas(elemento, {
+                        scale: 2,
+                        useCORS: true,
+                        logging: false,
+                        backgroundColor: '#ffffff',
+                        removeContainer: true
+                    });
+                    
+                    const imgData = canvas.toDataURL('image/png');
+                    const imgWidth = 190;
+                    const imgHeight = canvas.height * imgWidth / canvas.width;
+                    
+                    // Agregar imagen al PDF
+                    pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+                    
+                    // Pie de página discreto
+                    pdf.setFontSize(8);
+                    pdf.setTextColor(128, 128, 128);
+                    pdf.text('Desarrollado por AFM Solutions · afmsolutions.com.ar', 105, 290, { align: 'center' });
+                    
+                    // Descargar
+                    const dominio = DOM.obtenerValorCampo('dominio') || 'informe';
+                    const fecha = DOM.obtenerValorCampo('fecha') || new Date().toISOString().split('T')[0];
+                    pdf.save(`Informe_AkinaCheck_${dominio}_${fecha}.pdf`);
+                    
+                } catch (error) {
+                    console.error('Error generando PDF:', error);
+                    this.mostrarError('Error al generar el PDF. Por favor, intente nuevamente.');
+                } finally {
+                    // Restaurar botón
+                    btn.innerHTML = textoOriginal;
+                    btn.disabled = false;
+                }
+            },
+            
+            async cargarLibrerias() {
+                const cargarScript = (src) => new Promise((resolve, reject) => {
+                    if (document.querySelector(`script[src="${src}"]`)) {
+                        resolve();
+                        return;
+                    }
+                    
+                    const script = document.createElement('script');
+                    script.src = src;
+                    script.onload = resolve;
+                    script.onerror = reject;
+                    document.head.appendChild(script);
+                });
+                
+                await Promise.all([
+                    cargarScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'),
+                    cargarScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js')
+                ]);
+            },
+            
+            mostrarError(mensaje) {
+                alert(mensaje);
+            }
+        };
+
+        // ===== INICIALIZACIÓN =====
+        document.addEventListener('DOMContentLoaded', () => {
+            // Cargar estado guardado
+            AppState.cargarDesdeStorage();
+            
+            // Configurar fecha actual
+            const hoy = new Date().toISOString().split('T')[0];
+            DOM.get('fecha').value = hoy;
+            
+            // Inicializar componentes
+            ChecklistManager.init();
+            AsistenciaManager.actualizarMensaje();
+            VistaPreviaManager.actualizar();
+            
+            // Configurar eventos
+            this.setupEventos();
+            
+            // Configurar contador de caracteres
+            DOM.get('fundamento').addEventListener('input', (e) => {
+                DOM.get('char-count').textContent = e.target.value.length;
             });
+        });
+
+        // ===== EVENTOS GLOBALES =====
+        function setupEventos() {
+            // Recomendación
+            document.querySelectorAll('.recommendation-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    document.querySelectorAll('.recommendation-card').forEach(c => {
+                        c.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                    AppState.setRecomendacion(this.dataset.value);
+                    VistaPreviaManager.actualizarRecomendacion();
+                });
+            });
+            
+            // Campos que actualizan vista previa
+            ['vehiculo', 'dominio', 'kilometraje', 'fecha', 'fundamento', 'observaciones'].forEach(id => {
+                DOM.get(id).addEventListener('input', () => VistaPreviaManager.actualizar());
+            });
+            
+            // Botones de acción
+            DOM.get('btn-actualizar').addEventListener('click', () => VistaPreviaManager.actualizar());
+            DOM.get('btn-pdf').addEventListener('click', () => PDFManager.generar());
+            
+            // Cargar recomendación guardada
+            if (AppState.recomendacion) {
+                const card = document.querySelector(`.recommendation-card[data-value="${AppState.recomendacion}"]`);
+                if (card) {
+                    card.classList.add('selected');
+                    VistaPreviaManager.actualizarRecomendacion();
+                }
+            }
         }
+
+        // ===== API PÚBLICA (para consola de desarrollador) =====
+        window.AkinaCheck = {
+            version: CONFIG.version,
+            estado: AppState,
+            checklist: ChecklistManager,
+            vistaPrevia: VistaPreviaManager,
+            pdf: PDFManager,
+            resetear: () => {
+                AppState.reset();
+                location.reload();
+            },
+            exportarDatos: () => {
+                return {
+                    version: CONFIG.version,
+                    timestamp: new Date().toISOString(),
+                    estado: {
+                        recomendacion: AppState.recomendacion,
+                        checklist: AppState.checklist
+                    },
+                    datos: {
+                        vehiculo: DOM.obtenerValorCampo('vehiculo'),
+                        dominio: DOM.obtenerValorCampo('dominio'),
+                        kilometraje: DOM.obtenerValorCampo('kilometraje'),
+                        fecha: DOM.obtenerValorCampo('fecha'),
+                        fundamento: DOM.obtenerValorCampo('fundamento'),
+                        observaciones: DOM.obtenerValorCampo('observaciones')
+                    }
+                };
+            }
+        };
+
+        // Mostrar versión en consola
+        console.log(`%cAKINA CHECK v${CONFIG.version}`, 'color: #1e3a8a; font-weight: bold; font-size: 14px;');
+        console.log('Acceso a API de desarrollo: window.AkinaCheck');
     </script>
 </body>
 </html>
